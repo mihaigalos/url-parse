@@ -29,3 +29,9 @@ fn test_parse_scheme_works_when_typical() {
     let url = Url::parse("http://foo.bar").unwrap();
     assert!(url.scheme.unwrap() == "http");
 }
+
+#[test]
+fn test_parse_scheme_works_when_no_scheme_in_url() {
+    let url = Url::parse("foo.bar");
+    assert!(url.is_ok());
+}
