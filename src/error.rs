@@ -1,5 +1,3 @@
-use std::fmt;
-
 #[derive(Debug)]
 pub enum ParseError {
     UnknownError,

@@ -1,8 +1,23 @@
 pub mod error;
+use std::collections::HashMap;
 
 use crate::error::ParseError;
 
-struct Url {
+#[macro_use]
+extern crate lazy_static;
+
+lazy_static! {
+    static ref PROTOCOLS: HashMap<&'static str, u32> = {
+        let mut m = HashMap::new();
+        m.insert("http", 80);
+        m.insert("https", 443);
+        m.insert("ftp", 21);
+        m.insert("ssh", 22);
+        m
+    };
+}
+
+pub struct Url {
     scheme: Option<String>,
     _port: Option<u32>,
 }
