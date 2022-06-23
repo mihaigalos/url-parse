@@ -35,18 +35,32 @@ impl Url {
 
 #[test]
 fn test_parse_works_when_typical() {
-    let url = Url::parse("http://foo.bar");
-    assert!(url.is_ok());
+    for (protocol, _) in PROTOCOLS.iter() {
+        let address = &format!("{}{}", protocol, "foo.bar");
+        let url = Url::parse(address);
+        assert!(url.is_ok());
+    }
 }
 
 #[test]
 fn test_parse_scheme_works_when_typical() {
-    let url = Url::parse("http://foo.bar").unwrap();
-    assert!(url.scheme.unwrap() == "http");
+    for (protocol, _) in PROTOCOLS.iter() {
+        let address = &format!("{}://{}", protocol, "foo.bar");
+        let url = Url::parse(address).unwrap();
+        assert!(
+            &url.scheme.as_ref().unwrap() == protocol,
+            "{} != {}",
+            &url.scheme.as_ref().unwrap(),
+            protocol
+        );
+    }
 }
 
 #[test]
 fn test_parse_scheme_works_when_no_scheme_in_url() {
-    let url = Url::parse("foo.bar");
-    assert!(url.is_ok());
+    for (protocol, _) in PROTOCOLS.iter() {
+        let address = &format!("{}{}", protocol, "foo.bar");
+        let url = Url::parse(address);
+        assert!(url.is_ok());
+    }
 }
