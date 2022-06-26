@@ -29,30 +29,26 @@ impl Url {
     }
 }
 
-mod test {
-    #[test]
-    fn test_mixout_port_works_when_typical() {
-        use crate::url::*;
-        let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-        let (_, rest) = Url::mixout_scheme(input);
-        let (port, _, _) = Url::mixout_port(rest);
-        assert_eq!(port.unwrap(), "443");
-    }
+#[test]
+fn test_mixout_port_works_when_typical() {
+    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let (_, rest) = Url::mixout_scheme(input);
+    let (port, _, _) = Url::mixout_port(rest);
+    assert_eq!(port.unwrap(), "443");
+}
 
-    #[test]
-    fn test_mixout_port_works_when_no_path() {
-        use crate::url::*;
-        let input = "https://www.example.co.uk:443";
-        let (_, rest) = Url::mixout_scheme(input);
-        let (port, _, _) = Url::mixout_port(rest);
-        assert_eq!(port.unwrap(), "443");
-    }
-    #[test]
-    fn test_mixout_port_works_when_no_port() {
-        use crate::url::*;
-        let input = "https://www.example.co.uk";
-        let (_, rest) = Url::mixout_scheme(input);
-        let (port, _, _) = Url::mixout_port(rest);
-        assert!(port.is_none());
-    }
+#[test]
+fn test_mixout_port_works_when_no_path() {
+    let input = "https://www.example.co.uk:443";
+    let (_, rest) = Url::mixout_scheme(input);
+    let (port, _, _) = Url::mixout_port(rest);
+    assert_eq!(port.unwrap(), "443");
+}
+#[test]
+fn test_mixout_port_works_when_no_port() {
+    use crate::url::*;
+    let input = "https://www.example.co.uk";
+    let (_, rest) = Url::mixout_scheme(input);
+    let (port, _, _) = Url::mixout_port(rest);
+    assert!(port.is_none());
 }
