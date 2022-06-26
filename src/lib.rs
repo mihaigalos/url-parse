@@ -98,6 +98,14 @@ fn test_mixout_port_works_when_no_path() {
 }
 
 #[test]
+fn test_mixout_port_works_when_no_port() {
+    let input = "https://www.example.co.uk";
+    let (_, rest) = Url::mixout_scheme(input);
+    let (port, _, _) = Url::mixout_port(rest);
+    assert!(port.is_none());
+}
+
+#[test]
 fn test_parse_works_when_typical() {
     for (protocol, _) in PROTOCOLS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
