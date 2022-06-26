@@ -1,4 +1,5 @@
 mod port;
+mod query;
 mod scheme;
 
 use std::collections::HashMap;
@@ -24,8 +25,7 @@ pub struct Url {
     _top_level_domain: Option<String>,
     port: Option<String>,
     _path: Option<String>,
-    _query_string_separator: Option<char>,
-    _query_string_parameter: Option<String>,
+    query_string_parameter: Option<String>,
     _fragment: Option<String>,
 }
 
@@ -33,6 +33,7 @@ impl Url {
     pub fn parse(url: &str) -> Result<Url, ParseError> {
         let (scheme, rest) = Url::mixout_scheme(url);
         let (port, _, _) = Url::mixout_port(rest);
+        let query_string_parameter = Url::mixout_query(url);
         Ok(Url {
             scheme: scheme,
             _subdomain: None,
@@ -40,8 +41,7 @@ impl Url {
             _top_level_domain: None,
             port: port,
             _path: None,
-            _query_string_separator: None,
-            _query_string_parameter: None,
+            query_string_parameter: query_string_parameter,
             _fragment: None,
         })
     }
@@ -49,7 +49,9 @@ impl Url {
 
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
-        return self.scheme == other.scheme && self.port == other.port;
+        return self.scheme == other.scheme
+            && self.port == other.port
+            && self.query_string_parameter == other.query_string_parameter;
     }
 }
 
@@ -98,8 +100,7 @@ fn test_parse_works_when_full_url() {
             _top_level_domain: None,
             port: Some("443".to_string()),
             _path: None,
-            _query_string_separator: None,
-            _query_string_parameter: None,
+            query_string_parameter: Some("docid=720&hl=en#dayone".to_string()),
             _fragment: None,
         }
     );
