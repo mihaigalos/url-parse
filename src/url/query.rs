@@ -2,9 +2,9 @@ use crate::url::Url;
 
 impl Url {
     pub fn mixout_query<'a>(input: &'a str) -> Option<String> {
-        let position_colon = input.find("?");
-        if position_colon.is_some() {
-            let after = &input[position_colon.unwrap() + 1..];
+        let position_questionmark = input.find("?");
+        if position_questionmark.is_some() {
+            let after = &input[position_questionmark.unwrap() + 1..];
             return Some(after.to_string());
         }
         None

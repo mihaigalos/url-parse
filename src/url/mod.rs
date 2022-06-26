@@ -1,3 +1,4 @@
+mod anchor;
 mod port;
 mod query;
 mod scheme;
@@ -26,7 +27,7 @@ pub struct Url {
     port: Option<String>,
     _path: Option<String>,
     query_string_parameter: Option<String>,
-    _fragment: Option<String>,
+    anchor: Option<String>,
 }
 
 impl Url {
@@ -34,6 +35,7 @@ impl Url {
         let (scheme, rest) = Url::mixout_scheme(url);
         let (port, _, _) = Url::mixout_port(rest);
         let query_string_parameter = Url::mixout_query(url);
+        let anchor = Url::mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
             _subdomain: None,
@@ -42,7 +44,7 @@ impl Url {
             port: port,
             _path: None,
             query_string_parameter: query_string_parameter,
-            _fragment: None,
+            anchor: anchor,
         })
     }
 }
@@ -51,7 +53,8 @@ impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
             && self.port == other.port
-            && self.query_string_parameter == other.query_string_parameter;
+            && self.query_string_parameter == other.query_string_parameter
+            && self.anchor == other.anchor;
     }
 }
 
@@ -101,7 +104,7 @@ fn test_parse_works_when_full_url() {
             port: Some("443".to_string()),
             _path: None,
             query_string_parameter: Some("docid=720&hl=en#dayone".to_string()),
-            _fragment: None,
+            anchor: Some("dayone".to_string()),
         }
     );
 }
