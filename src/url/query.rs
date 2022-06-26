@@ -1,6 +1,6 @@
-use crate::url::Url;
+use crate::url::Parser;
 
-impl Url {
+impl Parser {
     pub fn mixout_query<'a>(input: &'a str) -> Option<String> {
         let position_questionmark = input.find("?");
         if position_questionmark.is_some() {
@@ -15,6 +15,6 @@ impl Url {
 fn test_mixout_query_works_when_typical() {
     use crate::url::*;
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let result = Url::mixout_query(input).unwrap();
+    let result = Parser::mixout_query(input).unwrap();
     assert_eq!(result, "docid=720&hl=en#dayone".to_string());
 }

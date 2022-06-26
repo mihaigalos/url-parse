@@ -1,22 +1,13 @@
 mod anchor;
+mod defaults;
 mod port;
 mod query;
 mod scheme;
 
-use std::collections::HashMap;
-
 use crate::error::ParseError;
+use crate::url::defaults::*;
 
-lazy_static! {
-    static ref PROTOCOLS: HashMap<&'static str, u32> = {
-        let mut m = HashMap::new();
-        m.insert("http", 80);
-        m.insert("https", 443);
-        m.insert("ftp", 21);
-        m.insert("ssh", 22);
-        m
-    };
-}
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Url {
@@ -30,12 +21,22 @@ pub struct Url {
     anchor: Option<String>,
 }
 
-impl Url {
+pub struct Parser {
+    default_port_mappings: HashMap<&'static str, u32>,
+}
+
+impl Parser {
+    pub fn new(port_mappings: Option<HashMap<&'static str, u32>>) -> Self {
+        Parser {
+            default_port_mappings: port_mappings.unwrap_or(default_port_mappings()),
+        }
+    }
+
     pub fn parse(url: &str) -> Result<Url, ParseError> {
-        let (scheme, rest) = Url::mixout_scheme(url);
-        let (port, _, _) = Url::mixout_port(rest);
-        let query_string_parameter = Url::mixout_query(url);
-        let anchor = Url::mixout_anchor(url);
+        let (scheme, rest) = Parser::mixout_scheme(url);
+        let (port, _, _) = Parser::mixout_port(rest);
+        let query_string_parameter = Parser::mixout_query(url);
+        let anchor = Parser::mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
             _subdomain: None,
@@ -60,18 +61,20 @@ impl PartialEq for Url {
 
 #[test]
 fn test_parse_works_when_typical() {
-    for (protocol, _) in PROTOCOLS.iter() {
+    use defaults::DEFAULT_PORT_MAPPINGS;
+    for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
-        let url = Url::parse(address);
+        let url = Parser::parse(address);
         assert!(url.is_ok());
     }
 }
 
 #[test]
 fn test_parse_scheme_works_when_typical() {
-    for (protocol, _) in PROTOCOLS.iter() {
+    use defaults::DEFAULT_PORT_MAPPINGS;
+    for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}://{}", protocol, "foo.bar");
-        let url = Url::parse(address).unwrap();
+        let url = Parser::parse(address).unwrap();
         assert!(
             &url.scheme.as_ref().unwrap() == protocol,
             "{} != {}",
@@ -83,9 +86,10 @@ fn test_parse_scheme_works_when_typical() {
 
 #[test]
 fn test_parse_scheme_works_when_no_scheme_in_url() {
-    for (protocol, _) in PROTOCOLS.iter() {
+    use defaults::DEFAULT_PORT_MAPPINGS;
+    for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
-        let url = Url::parse(address);
+        let url = Parser::parse(address);
         assert!(url.is_ok());
     }
 }
@@ -93,7 +97,7 @@ fn test_parse_scheme_works_when_no_scheme_in_url() {
 #[test]
 fn test_parse_works_when_full_url() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let result = Url::parse(input).unwrap();
+    let result = Parser::parse(input).unwrap();
     assert_eq!(
         result,
         Url {
