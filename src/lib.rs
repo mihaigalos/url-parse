@@ -86,12 +86,6 @@ fn test_parse_scheme_works_when_no_scheme_in_url() {
         assert!(url.is_ok());
     }
 }
-#[test]
-fn test_mixout_scheme_works_when_typical() {
-    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let (scheme, _) = Url::mixout_scheme(input);
-    assert_eq!(scheme.unwrap(), "https");
-}
 
 #[test]
 #[ignore]
@@ -102,4 +96,25 @@ fn test_parse_scheme_works_when_full_url() {
         let url = Url::parse(address);
         assert!(url.is_ok());
     }
+}
+
+#[test]
+fn test_mixout_scheme_works_when_typical() {
+    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let (scheme, _) = Url::mixout_scheme(input);
+    assert_eq!(scheme.unwrap(), "https");
+}
+
+#[test]
+fn test_mixout_scheme_works_when_no_port() {
+    let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+    let (scheme, _) = Url::mixout_scheme(input);
+    assert_eq!(scheme.unwrap(), "https");
+}
+
+#[test]
+fn test_mixout_scheme_works_when_no_scheme() {
+    let input = "www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+    let (scheme, _) = Url::mixout_scheme(input);
+    assert!(scheme.is_none());
 }
