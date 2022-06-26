@@ -22,11 +22,11 @@ pub struct Url {
 }
 
 pub struct Parser {
-    default_port_mappings: HashMap<&'static str, u32>,
+    default_port_mappings: HashMap<&'static str, (u32, &'static str)>,
 }
 
 impl Parser {
-    pub fn new(port_mappings: Option<HashMap<&'static str, u32>>) -> Self {
+    pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
         Parser {
             default_port_mappings: port_mappings.unwrap_or(default_port_mappings()),
         }
