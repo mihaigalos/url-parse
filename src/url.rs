@@ -15,7 +15,7 @@ lazy_static! {
 }
 
 #[derive(Debug)]
-struct Url {
+pub struct Url {
     scheme: Option<String>,
     _subdomain: Option<String>,
     _domain: Option<String>,
