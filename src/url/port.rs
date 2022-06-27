@@ -3,7 +3,7 @@ use regex::Regex;
 use crate::url::Parser;
 
 impl Parser {
-    pub fn mixout_port<'a>(input: &'a str) -> (Option<String>, &'a str, &'a str) {
+    pub fn mixout_port<'a>(input: &'a str) -> (Option<u32>, &'a str, &'a str) {
         let position_colon = input.find(":");
         if position_colon.is_some() {
             let before = &input[..position_colon.unwrap()];
@@ -11,12 +11,12 @@ impl Parser {
             let re = Regex::new(r"(\d+).*").unwrap();
             let caps = re.captures(after).unwrap();
             let port = if caps.len() > 1 {
-                Some(caps.get(1).unwrap().as_str().to_string())
+                Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap())
             } else if caps.len() == 1 {
                 let re = Regex::new(r"^(\d+)$").unwrap();
                 let caps = re.captures(after).unwrap();
                 if caps.len() == 1 {
-                    Some(caps.get(0).unwrap().as_str().to_string());
+                    Some(caps.get(0).unwrap().as_str().trim().parse::<u32>().unwrap());
                 }
                 None
             } else {
@@ -34,7 +34,7 @@ fn test_mixout_port_works_when_typical() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let (_, rest) = Parser::mixout_scheme(input);
     let (port, _, _) = Parser::mixout_port(rest);
-    assert_eq!(port.unwrap(), "443");
+    assert_eq!(port.unwrap(), 443);
 }
 
 #[test]
@@ -42,13 +42,5 @@ fn test_mixout_port_works_when_no_path() {
     let input = "https://www.example.co.uk:443";
     let (_, rest) = Parser::mixout_scheme(input);
     let (port, _, _) = Parser::mixout_port(rest);
-    assert_eq!(port.unwrap(), "443");
-}
-#[test]
-fn test_mixout_port_works_when_no_port() {
-    use crate::url::Parser;
-    let input = "https://www.example.co.uk";
-    let (_, rest) = Parser::mixout_scheme(input);
-    let (port, _, _) = Parser::mixout_port(rest);
-    assert!(port.is_none());
+    assert_eq!(port.unwrap(), 443);
 }
