@@ -32,11 +32,11 @@ impl Parser {
         }
     }
 
-    pub fn parse(url: &str) -> Result<Url, ParseError> {
-        let (scheme, rest) = Parser::mixout_scheme(url);
-        let (port, _, _) = Parser::mixout_port(rest);
-        let query_string_parameter = Parser::mixout_query(url);
-        let anchor = Parser::mixout_anchor(url);
+    pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
+        let (scheme, rest) = self.mixout_scheme(url);
+        let (port, _, _) = self.mixout_port(rest, scheme.clone());
+        let query_string_parameter = self.mixout_query(url);
+        let anchor = self.mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
             _subdomain: None,
@@ -64,7 +64,7 @@ fn test_parse_works_when_typical() {
     use defaults::DEFAULT_PORT_MAPPINGS;
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
-        let url = Parser::parse(address);
+        let url = Parser::new(None).parse(address);
         assert!(url.is_ok());
     }
 }
@@ -74,7 +74,7 @@ fn test_parse_scheme_works_when_typical() {
     use defaults::DEFAULT_PORT_MAPPINGS;
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}://{}", protocol, "foo.bar");
-        let url = Parser::parse(address).unwrap();
+        let url = Parser::new(None).parse(address).unwrap();
         assert!(
             &url.scheme.as_ref().unwrap() == protocol,
             "{} != {}",
@@ -89,7 +89,7 @@ fn test_parse_scheme_works_when_no_scheme_in_url() {
     use defaults::DEFAULT_PORT_MAPPINGS;
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
-        let url = Parser::parse(address);
+        let url = Parser::new(None).parse(address);
         assert!(url.is_ok());
     }
 }
@@ -97,7 +97,7 @@ fn test_parse_scheme_works_when_no_scheme_in_url() {
 #[test]
 fn test_parse_works_when_full_url() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let result = Parser::parse(input).unwrap();
+    let result = Parser::new(None).parse(input).unwrap();
     assert_eq!(
         result,
         Url {
