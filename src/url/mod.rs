@@ -1,5 +1,6 @@
 mod anchor;
 mod defaults;
+mod path;
 mod port;
 mod query;
 mod scheme;
@@ -16,7 +17,7 @@ pub struct Url {
     _domain: Option<String>,
     _top_level_domain: Option<String>,
     port: Option<u32>,
-    _path: Option<String>,
+    _path: Option<Vec<String>>,
     query_string_parameter: Option<String>,
     anchor: Option<String>,
 }
@@ -34,7 +35,7 @@ impl Parser {
 
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
         let (scheme, rest) = self.mixout_scheme(url);
-        let (port, _, _) = self.mixout_port(rest, scheme.clone());
+        let (port, _, after) = self.mixout_port(rest, scheme.clone());
         let query_string_parameter = self.mixout_query(url);
         let anchor = self.mixout_anchor(url);
         Ok(Url {
