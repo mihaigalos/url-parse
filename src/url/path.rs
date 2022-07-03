@@ -8,21 +8,16 @@ impl Parser {
             _ => &input,
         };
         let position_questionmark = input.find("?");
-        if position_questionmark.is_some() {
-            return Some(
-                (input[..position_questionmark.unwrap()])
-                    .split("/")
-                    .map(|s| s.to_string())
-                    .collect::<Vec<String>>(),
-            );
-        } else {
-            return Some(
-                input
-                    .split("/")
-                    .map(|s| s.to_string())
-                    .collect::<Vec<String>>(),
-            );
+        let path_string = match position_questionmark {
+            Some(v) => &input[..v],
+            None => input,
         };
+        return Some(
+            path_string
+                .split("/")
+                .map(|s| s.to_string())
+                .collect::<Vec<String>>(),
+        );
     }
 
     fn substring_after_port(&self, input: &str) -> Option<String> {
