@@ -27,17 +27,13 @@ impl Parser {
             None => input,
         };
         let port = self.mixout_port(rest);
-        return match port {
-            Some(v) => {
-                let pos_port = rest.find(&v.to_string()).unwrap();
-                Some(
-                    rest.get(pos_port + v.to_string().len() + 1..)
-                        .unwrap()
-                        .to_string(),
-                )
-            }
-            None => Some(rest.to_string()),
+
+        let (pos_port, len_port_string) = match port {
+            Some(v) => (rest.find(&v.to_string()).unwrap(), v.to_string().len() + 1),
+            None => (0, 0),
         };
+
+        return Some(rest.get(pos_port + len_port_string..).unwrap().to_string());
     }
 }
 
