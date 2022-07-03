@@ -18,7 +18,7 @@ pub struct Url {
     _top_level_domain: Option<String>,
     port: Option<u32>,
     path: Option<Vec<String>>,
-    query_string_parameter: Option<String>,
+    query: Option<String>,
     anchor: Option<String>,
 }
 
@@ -37,7 +37,7 @@ impl Parser {
         let scheme = self.mixout_scheme(url);
         let port = self.mixout_port(url);
         let path = self.mixout_path(url);
-        let query_string_parameter = self.mixout_query(url);
+        let query = self.mixout_query(url);
         let anchor = self.mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
@@ -46,7 +46,7 @@ impl Parser {
             _top_level_domain: None,
             port: port,
             path: path,
-            query_string_parameter: query_string_parameter,
+            query: query,
             anchor: anchor,
         })
     }
@@ -57,7 +57,7 @@ impl PartialEq for Url {
         return self.scheme == other.scheme
             && self.port == other.port
             && self.path == other.path
-            && self.query_string_parameter == other.query_string_parameter
+            && self.query == other.query
             && self.anchor == other.anchor;
     }
 }
@@ -114,7 +114,7 @@ fn test_parse_works_when_full_url() {
                 "article".to_string(),
                 "search".to_string(),
             ]),
-            query_string_parameter: Some("docid=720&hl=en#dayone".to_string()),
+            query: Some("docid=720&hl=en#dayone".to_string()),
             anchor: Some("dayone".to_string()),
         }
     );
