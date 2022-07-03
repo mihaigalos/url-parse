@@ -26,7 +26,7 @@ impl Parser {
 }
 
 #[test]
-fn test_mixout_path_works_when_typical() {
+fn test_mixout_path_works_when_partial_url() {
     use crate::url::*;
     let input = "blog/article/search?docid=720&hl=en#dayone";
     let result = Parser::new(None).mixout_path(input).unwrap();
@@ -39,7 +39,7 @@ fn test_mixout_path_works_when_typical() {
 }
 
 #[test]
-fn test_mixout_path_works_when_starts_with_slash() {
+fn test_mixout_path_works_when_partial_url_starts_with_slash() {
     use crate::url::*;
     let input = "/blog/article/search?docid=720&hl=en#dayone";
     let result = Parser::new(None).mixout_path(input).unwrap();
