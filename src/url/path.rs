@@ -2,7 +2,7 @@ use crate::url::Parser;
 
 impl Parser {
     pub fn mixout_path<'a>(&self, input: &str) -> Option<Vec<String>> {
-        let input = self.substring_after_port(input).unwrap();
+        let input = self.substring_after_port(input);
         let input = match input.chars().nth(0) {
             Some('/') => &input[1..],
             _ => &input,
@@ -20,7 +20,7 @@ impl Parser {
         );
     }
 
-    fn substring_after_port(&self, input: &str) -> Option<String> {
+    fn substring_after_port<'a>(&self, input: &'a str) -> &'a str {
         let scheme = self.mixout_scheme(input);
         let rest = match scheme.clone() {
             Some(v) => input.get(v.len() + 1..).unwrap(),
@@ -33,7 +33,7 @@ impl Parser {
             None => (0, 0),
         };
 
-        return Some(rest.get(pos_port + len_port_string..).unwrap().to_string());
+        return rest.get(pos_port + len_port_string..).unwrap();
     }
 }
 
@@ -80,7 +80,7 @@ fn test_mixout_path_works_when_typical() {
 fn test_substring_after_port_works_when_typical() {
     use crate::url::*;
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let result = Parser::new(None).substring_after_port(input).unwrap();
+    let result = Parser::new(None).substring_after_port(input);
     let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
     assert_eq!(result, expected);
 }

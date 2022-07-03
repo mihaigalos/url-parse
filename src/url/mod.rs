@@ -1,5 +1,6 @@
 mod anchor;
 mod defaults;
+mod login;
 mod path;
 mod port;
 mod query;
@@ -13,6 +14,7 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Url {
     scheme: Option<String>,
+    login: Option<(String, String)>,
     _subdomain: Option<String>,
     _domain: Option<String>,
     _top_level_domain: Option<String>,
@@ -41,6 +43,7 @@ impl Parser {
         let anchor = self.mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
+            login: None,
             _subdomain: None,
             _domain: None,
             _top_level_domain: None,
@@ -55,6 +58,7 @@ impl Parser {
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
+            && self.login == other.login
             && self.port == other.port
             && self.path == other.path
             && self.query == other.query
@@ -105,6 +109,7 @@ fn test_parse_works_when_full_url() {
         result,
         Url {
             scheme: Some("https".to_string()),
+            login: None,
             _subdomain: None,
             _domain: None,
             _top_level_domain: None,
@@ -129,6 +134,7 @@ fn test_parse_works_when_full_url_with_login() {
         result,
         Url {
             scheme: Some("https".to_string()),
+            login: None,
             _subdomain: None,
             _domain: None,
             _top_level_domain: None,
