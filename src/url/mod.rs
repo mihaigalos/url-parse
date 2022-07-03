@@ -149,3 +149,27 @@ fn test_parse_works_when_full_url_with_login() {
         }
     );
 }
+
+#[test]
+fn test_parse_works_when_user_login() {
+    let input = "scp://user@example.co.uk:22/path/to/file.txt";
+    let result = Parser::new(None).parse(input).unwrap();
+    assert_eq!(
+        result,
+        Url {
+            scheme: Some("scp".to_string()),
+            login: None,
+            _subdomain: None,
+            _domain: None,
+            _top_level_domain: None,
+            port: Some(22),
+            path: Some(vec![
+                "path".to_string(),
+                "to".to_string(),
+                "file.txt".to_string(),
+            ]),
+            query: None,
+            anchor: None,
+        }
+    );
+}
