@@ -17,7 +17,7 @@ pub struct Url {
     _domain: Option<String>,
     _top_level_domain: Option<String>,
     port: Option<u32>,
-    _path: Option<Vec<String>>,
+    path: Option<Vec<String>>,
     query_string_parameter: Option<String>,
     anchor: Option<String>,
 }
@@ -36,6 +36,7 @@ impl Parser {
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
         let scheme = self.mixout_scheme(url);
         let port = self.mixout_port(url);
+        let path = self.mixout_path(url);
         let query_string_parameter = self.mixout_query(url);
         let anchor = self.mixout_anchor(url);
         Ok(Url {
@@ -44,7 +45,7 @@ impl Parser {
             _domain: None,
             _top_level_domain: None,
             port: port,
-            _path: None,
+            path: path,
             query_string_parameter: query_string_parameter,
             anchor: anchor,
         })
@@ -55,6 +56,7 @@ impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
             && self.port == other.port
+            && self.path == other.path
             && self.query_string_parameter == other.query_string_parameter
             && self.anchor == other.anchor;
     }
@@ -107,7 +109,11 @@ fn test_parse_works_when_full_url() {
             _domain: None,
             _top_level_domain: None,
             port: Some(443),
-            _path: None,
+            path: Some(vec![
+                "blog".to_string(),
+                "article".to_string(),
+                "search".to_string(),
+            ]),
             query_string_parameter: Some("docid=720&hl=en#dayone".to_string()),
             anchor: Some("dayone".to_string()),
         }
