@@ -14,19 +14,29 @@ impl Utils {
     }
 
     pub fn substring_after_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let scheme = parser.mixout_scheme(input);
-        let rest = match scheme.clone() {
-            Some(v) => input.get(v.len() + 1..).unwrap(),
-            None => input,
-        };
-        let port = parser.mixout_port(rest);
+        let input = Utils::substring_after_scheme(&parser, input);
+        let port = parser.mixout_port(input);
 
-        let (pos_port, len_port_string) = match port {
-            Some(v) => (rest.find(&v.to_string()).unwrap(), v.to_string().len() + 1),
-            None => (0, 0),
+        if input.find(":").is_some() {
+            let (pos_port, len_port_string) = match port {
+                Some(v) => (input.find(&v.to_string()).unwrap(), v.to_string().len() + 1),
+                None => (0, 0),
+            };
+
+            return input.get(pos_port + len_port_string..).unwrap();
+        }
+        return input;
+    }
+
+    pub fn substring_before_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
+        let port = parser.mixout_port(input);
+
+        let pos_port = match port {
+            Some(v) => input.find(&v.to_string()).unwrap() - 1,
+            None => input.len(),
         };
 
-        return rest.get(pos_port + len_port_string..).unwrap();
+        return input.get(..pos_port).unwrap();
     }
 }
 
@@ -47,6 +57,17 @@ fn test_substring_after_port_works_when_typical() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
     let parser = Parser::new(None);
+    let input = Utils::substring_after_scheme(&parser, input);
     let result = Utils::substring_after_port(&parser, input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_substring_before_port_works_when_typical() {
+    use crate::url::*;
+    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let expected = "https://www.example.co.uk".to_string();
+    let parser = Parser::new(None);
+    let result = Utils::substring_before_port(&parser, input);
     assert_eq!(result, expected);
 }
