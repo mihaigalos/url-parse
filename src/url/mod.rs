@@ -1,5 +1,6 @@
 mod anchor;
 mod defaults;
+mod domain;
 mod login;
 mod path;
 mod port;

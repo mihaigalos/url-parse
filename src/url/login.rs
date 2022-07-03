@@ -1,9 +1,10 @@
 use crate::url::Parser;
+use crate::utils::Utils;
 use regex::Regex;
 
 impl Parser {
     pub fn mixout_login<'a>(&self, input: &'a str) -> Option<(String, String)> {
-        let input = self.substring_after_scheme(input);
+        let input = Utils::substring_after_scheme(self, input);
         let path = self.mixout_path(input);
         let pos_path: usize = match path {
             Some(v) => input.find(&v.join("/")).unwrap(),
@@ -30,15 +31,6 @@ impl Parser {
             };
         }
         None
-    }
-    fn substring_after_scheme<'a>(&self, input: &'a str) -> &'a str {
-        let scheme = self.mixout_scheme(input);
-        let double_slash_length = 2;
-        let rest = match scheme.clone() {
-            Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
-            None => input,
-        };
-        return rest;
     }
 }
 
