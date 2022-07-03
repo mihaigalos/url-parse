@@ -34,8 +34,8 @@ impl Parser {
     }
 
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
-        let (scheme, rest) = self.mixout_scheme(url);
-        let (port, _, after) = self.mixout_port(rest, scheme.clone());
+        let scheme = self.mixout_scheme(url);
+        let port = self.mixout_port(url);
         let query_string_parameter = self.mixout_query(url);
         let anchor = self.mixout_anchor(url);
         Ok(Url {

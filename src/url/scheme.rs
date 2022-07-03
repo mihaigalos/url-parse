@@ -1,12 +1,12 @@
 use crate::url::Parser;
 
 impl Parser {
-    pub fn mixout_scheme<'a>(&self, input: &'a str) -> (Option<String>, &'a str) {
+    pub fn mixout_scheme<'a>(&self, input: &'a str) -> Option<String> {
         let split: Vec<&str> = input.split("://").collect();
 
         match split.len() {
-            2 => return (Some(split[0].to_string()), split[1]),
-            _ => return (None, split[0]),
+            2 => return Some(split[0].to_string()),
+            _ => return None,
         };
     }
 }
@@ -26,20 +26,20 @@ fn test_parse_scheme_works_when_full_url() {
 #[test]
 fn test_mixout_scheme_works_when_typical() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let (scheme, _) = Parser::new(None).mixout_scheme(input);
+    let scheme = Parser::new(None).mixout_scheme(input);
     assert_eq!(scheme.unwrap(), "https");
 }
 
 #[test]
 fn test_mixout_scheme_works_when_no_port() {
     let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-    let (scheme, _) = Parser::new(None).mixout_scheme(input);
+    let scheme = Parser::new(None).mixout_scheme(input);
     assert_eq!(scheme.unwrap(), "https");
 }
 
 #[test]
 fn test_mixout_scheme_works_when_no_scheme() {
     let input = "www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-    let (scheme, _) = Parser::new(None).mixout_scheme(input);
+    let scheme = Parser::new(None).mixout_scheme(input);
     assert!(scheme.is_none());
 }
