@@ -16,9 +16,11 @@ impl PartialEq for DomainFields {
             && self.subdomain == other.subdomain;
     }
 }
+
 impl Parser {
     pub fn mixout_domain_fields<'a>(&self, input: &'a str) -> DomainFields {
         let input = Utils::substring_after_scheme(self, input);
+        let input = Utils::substring_before_port(self, input);
         let re = Regex::new(r"(.*)\.(.*)\.(.*)").unwrap();
         let caps = re.captures(input);
         if caps.is_some() {
