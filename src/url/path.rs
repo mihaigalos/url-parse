@@ -30,9 +30,12 @@ fn test_mixout_path_works_when_typical() {
     use crate::url::*;
     let input = "blog/article/search?docid=720&hl=en#dayone";
     let result = Parser::new(None).mixout_path(input).unwrap();
-    assert_eq!(result[0], "blog".to_string());
-    assert_eq!(result[1], "article".to_string());
-    assert_eq!(result[2], "search".to_string());
+    let expected = vec![
+        "blog".to_string(),
+        "article".to_string(),
+        "search".to_string(),
+    ];
+    assert_eq!(result, expected);
 }
 
 #[test]
@@ -40,7 +43,10 @@ fn test_mixout_path_works_when_starts_with_slash() {
     use crate::url::*;
     let input = "/blog/article/search?docid=720&hl=en#dayone";
     let result = Parser::new(None).mixout_path(input).unwrap();
-    assert_eq!(result[0], "blog".to_string());
-    assert_eq!(result[1], "article".to_string());
-    assert_eq!(result[2], "search".to_string());
+    let expected = vec![
+        "blog".to_string(),
+        "article".to_string(),
+        "search".to_string(),
+    ];
+    assert_eq!(result, expected);
 }
