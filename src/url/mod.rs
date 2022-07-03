@@ -119,3 +119,27 @@ fn test_parse_works_when_full_url() {
         }
     );
 }
+
+#[test]
+fn test_parse_works_when_full_url_with_login() {
+    let input =
+        "https://user:password@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let result = Parser::new(None).parse(input).unwrap();
+    assert_eq!(
+        result,
+        Url {
+            scheme: Some("https".to_string()),
+            _subdomain: None,
+            _domain: None,
+            _top_level_domain: None,
+            port: Some(443),
+            path: Some(vec![
+                "blog".to_string(),
+                "article".to_string(),
+                "search".to_string(),
+            ]),
+            query: Some("docid=720&hl=en#dayone".to_string()),
+            anchor: Some("dayone".to_string()),
+        }
+    );
+}
