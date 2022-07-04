@@ -49,25 +49,25 @@ Passing a `Some(HashMap)` to `Parser::new()` can be used to create custom scheme
 The hashmap is a key,value pair representing the scheme name (key) to a port and description mapping (value).
 
 ```rust
-    let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
-    let mut myport_mappings = HashMap::new();
-    myport_mappings.insert("myschema", (8888, "My custom schema"));
-    let result = Parser::new(Some(myport_mappings)).parse(input).unwrap();
-    assert_eq!(
-        result,
-        Url {
-            scheme: Some("myschema".to_string()),
-            user_pass: (Some("user".to_string()), Some("pass".to_string())),
-            top_level_domain: Some("example".to_string()),
-            domain: Some("co.uk".to_string()),
-            port: Some(8888),
-            path: Some(vec![
-                "path".to_string(),
-                "to".to_string(),
-                "file.txt".to_string(),
-            ]),
-            query: None,
-            anchor: None,
-        }
-    );
+let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
+let mut myport_mappings = HashMap::new();
+myport_mappings.insert("myschema", (8888, "My custom schema"));
+let result = Parser::new(Some(myport_mappings)).parse(input).unwrap();
+assert_eq!(
+    result,
+    Url {
+        scheme: Some("myschema".to_string()),
+        user_pass: (Some("user".to_string()), Some("pass".to_string())),
+        top_level_domain: Some("example".to_string()),
+        domain: Some("co.uk".to_string()),
+        port: Some(8888),
+        path: Some(vec![
+            "path".to_string(),
+            "to".to_string(),
+            "file.txt".to_string(),
+        ]),
+        query: None,
+        anchor: None,
+    }
+);
 ```
