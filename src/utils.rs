@@ -13,6 +13,14 @@ impl Utils {
         return rest;
     }
 
+    pub fn substring_after_login<'a>(parser: &Parser, input: &'a str) -> &'a str {
+        let input = Utils::substring_after_scheme(&parser, input);
+        match input.find("@") {
+            Some(pos) => &input[pos + 1..],
+            None => input,
+        }
+    }
+
     pub fn substring_after_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let input = Utils::substring_after_scheme(&parser, input);
         let port = parser.mixout_port(input);
@@ -80,5 +88,15 @@ fn test_substring_before_port_works_when_typical() {
     let expected = "https://www.example.co.uk".to_string();
     let parser = Parser::new(None);
     let result = Utils::substring_before_port(&parser, input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_substring_after_login_works_when_typical() {
+    let input =
+        "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    let parser = Parser::new(None);
+    let result = Utils::substring_after_login(&parser, input);
     assert_eq!(result, expected);
 }

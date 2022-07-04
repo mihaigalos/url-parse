@@ -15,10 +15,9 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Url {
     scheme: Option<String>,
-    login: Option<(String, String)>,
-    _subdomain: Option<String>,
-    _domain: Option<String>,
-    _top_level_domain: Option<String>,
+    user_pass: (Option<String>, Option<String>),
+    top_level_domain: Option<String>,
+    domain: Option<String>,
     port: Option<u32>,
     path: Option<Vec<String>>,
     query: Option<String>,
@@ -38,16 +37,17 @@ impl Parser {
 
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
         let scheme = self.mixout_scheme(url);
+        let user_pass = self.mixout_login(url);
+        let domain_fields = self.mixout_domain_fields(url);
         let port = self.mixout_port(url);
         let path = self.mixout_path(url);
         let query = self.mixout_query(url);
         let anchor = self.mixout_anchor(url);
         Ok(Url {
             scheme: scheme,
-            login: None,
-            _subdomain: None,
-            _domain: None,
-            _top_level_domain: None,
+            user_pass: user_pass,
+            top_level_domain: domain_fields.top_level_domain,
+            domain: domain_fields.domain,
             port: port,
             path: path,
             query: query,
@@ -59,7 +59,9 @@ impl Parser {
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
-            && self.login == other.login
+            && self.user_pass == other.user_pass
+            && self.top_level_domain == other.top_level_domain
+            && self.domain == other.domain
             && self.port == other.port
             && self.path == other.path
             && self.query == other.query
@@ -110,10 +112,9 @@ fn test_parse_works_when_full_url() {
         result,
         Url {
             scheme: Some("https".to_string()),
-            login: None,
-            _subdomain: None,
-            _domain: None,
-            _top_level_domain: None,
+            user_pass: (None, None),
+            top_level_domain: Some("www".to_string()),
+            domain: Some("example.co.uk".to_string()),
             port: Some(443),
             path: Some(vec![
                 "blog".to_string(),
@@ -129,16 +130,15 @@ fn test_parse_works_when_full_url() {
 #[test]
 fn test_parse_works_when_full_url_with_login() {
     let input =
-        "https://user:password@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+        "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let result = Parser::new(None).parse(input).unwrap();
     assert_eq!(
         result,
         Url {
             scheme: Some("https".to_string()),
-            login: None,
-            _subdomain: None,
-            _domain: None,
-            _top_level_domain: None,
+            user_pass: (Some("user".to_string()), Some("pass".to_string())),
+            top_level_domain: Some("www".to_string()),
+            domain: Some("example.co.uk".to_string()),
             port: Some(443),
             path: Some(vec![
                 "blog".to_string(),
@@ -159,10 +159,9 @@ fn test_parse_works_when_user_login() {
         result,
         Url {
             scheme: Some("scp".to_string()),
-            login: None,
-            _subdomain: None,
-            _domain: None,
-            _top_level_domain: None,
+            user_pass: (Some("user".to_string()), Some("".to_string())),
+            top_level_domain: Some("example".to_string()),
+            domain: Some("co.uk".to_string()),
             port: Some(22),
             path: Some(vec![
                 "path".to_string(),
