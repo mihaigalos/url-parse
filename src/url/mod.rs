@@ -14,14 +14,14 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Url {
-    scheme: Option<String>,
-    user_pass: (Option<String>, Option<String>),
-    top_level_domain: Option<String>,
-    domain: Option<String>,
-    port: Option<u32>,
-    path: Option<Vec<String>>,
-    query: Option<String>,
-    anchor: Option<String>,
+    pub scheme: Option<String>,
+    pub user_pass: (Option<String>, Option<String>),
+    pub top_level_domain: Option<String>,
+    pub domain: Option<String>,
+    pub port: Option<u32>,
+    pub path: Option<Vec<String>>,
+    pub query: Option<String>,
+    pub anchor: Option<String>,
 }
 
 pub struct Parser {
@@ -34,7 +34,8 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
-    /// let parser = Parser::new(None).parse(input).unwrap();
+    /// use url_parse::url::Parser;
+    /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
         Parser {
@@ -47,6 +48,8 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
+    /// use url_parse::url::Parser;
+    /// use url_parse::url::Url;
     /// let input = "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let result = Parser::new(None).parse(input).unwrap();
     /// assert_eq!(
