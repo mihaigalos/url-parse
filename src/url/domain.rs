@@ -18,6 +18,10 @@ impl Parser {
     pub fn mixout_domain_fields<'a>(&self, input: &'a str) -> DomainFields {
         let input = Utils::substring_after_login(self, input);
         let input = Utils::substring_before_port(self, input);
+        let input = match input.find("/") {
+            Some(pos) => &input[..pos],
+            None => input,
+        };
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input).unwrap();
         return DomainFields {
@@ -55,6 +59,18 @@ fn test_mixout_domain_fields_works_when_no_top_level_domain() {
 fn test_mixout_domain_fields_works_when_typical_long_subdomain() {
     use crate::url::*;
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let expected = DomainFields {
+        top_level_domain: Some("www".to_string()),
+        domain: Some("example.co.uk".to_string()),
+    };
+    let result = Parser::new(None).mixout_domain_fields(input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_mixout_domain_fields_works_when_no_port() {
+    use crate::url::*;
+    let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
     let expected = DomainFields {
         top_level_domain: Some("www".to_string()),
         domain: Some("example.co.uk".to_string()),

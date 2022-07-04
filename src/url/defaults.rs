@@ -6,6 +6,7 @@ pub fn default_port_mappings() -> HashMap<&'static str, (u32, &'static str)> {
     m.insert("http", (80, "Hypertext Transfer Protocol"));
     m.insert("https", (443, "Hypertext Transfer Protocol Secure"));
     m.insert("ssh", (22, "SSH File Transfer Protocol"));
+    m.insert("scp", (22, "SSH File Transfer Protocol"));
     m.insert("s3", (443, "Amazon S3 File Transfer Protocol"));
     m
 }

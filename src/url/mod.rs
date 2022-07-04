@@ -175,6 +175,29 @@ fn test_parse_works_when_user_login() {
 }
 
 #[test]
+fn test_parse_works_when_user_login_no_port() {
+    let input = "scp://user@example.co.uk/path/to/file.txt";
+    let result = Parser::new(None).parse(input).unwrap();
+    assert_eq!(
+        result,
+        Url {
+            scheme: Some("scp".to_string()),
+            user_pass: (Some("user".to_string()), None),
+            top_level_domain: Some("example".to_string()),
+            domain: Some("co.uk".to_string()),
+            port: Some(22),
+            path: Some(vec![
+                "path".to_string(),
+                "to".to_string(),
+                "file.txt".to_string(),
+            ]),
+            query: None,
+            anchor: None,
+        }
+    );
+}
+
+#[test]
 fn test_parse_works_when_custom_port_mappings_full_login() {
     let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
     let mut myport_mappings = HashMap::new();
