@@ -10,6 +10,8 @@ Currently, [url](https://crates.io/crates/url) does not provide support for i.e.
 
 ## Usage
 
+### Basic
+
 Create a new parser object with `Parser::new()`. You can then use `parser.parse(url)` which will return a public `Url` parsed structure back.
 
 Its fields are then directly accessible:

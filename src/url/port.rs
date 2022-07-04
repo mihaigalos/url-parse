@@ -1,20 +1,23 @@
 use regex::Regex;
 
 use crate::url::Parser;
+use crate::utils::Utils;
 
 impl Parser {
     pub fn mixout_port<'a>(&self, input: &'a str) -> Option<u32> {
         let scheme = self.mixout_scheme(input);
-        let rest = match scheme.clone() {
-            Some(v) => input.get(v.len() + 1..).unwrap(),
-            None => input,
-        };
+        let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(":");
         if position_colon.is_some() {
             let _before = &input[..position_colon.unwrap()];
             let after = &input[position_colon.unwrap() + 1..];
-            let re = Regex::new(r"(\d+).*").unwrap();
-            let caps = re.captures(after).unwrap();
+            let re = Regex::new(r"(\d+)/.*").unwrap();
+            let caps = re.captures(after);
+            if caps.is_none() {
+                return None;
+            }
+            let caps = caps.unwrap();
+
             let port = if caps.len() > 1 {
                 Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap())
             } else if caps.len() == 1 {
@@ -60,4 +63,24 @@ fn test_mixout_port_default_works_when_https() {
     let port = Parser::new(None).mixout_port(input);
     assert!(port.is_some());
     assert_eq!(port.unwrap(), 443);
+}
+
+#[test]
+fn test_mixout_port_works_when_default_port_login_and_no_port() {
+    let input = "https://user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+    let result = Parser::new(None).mixout_port(input).unwrap();
+    assert_eq!(result, 443);
+}
+#[test]
+fn test_mixout_port_works_when_login_and_no_port() {
+    let input = "user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+    let result = Parser::new(None).mixout_port(input);
+    assert!(result.is_none());
+}
+
+#[test]
+fn test_mixout_port_works_when_login_and_no_port_with_numbers() {
+    let input = "user:pass@www.example.co.uk/blog/article/720/test.txt";
+    let result = Parser::new(None).mixout_port(input);
+    assert!(result.is_none());
 }
