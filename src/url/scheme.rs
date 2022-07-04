@@ -12,10 +12,8 @@ impl Parser {
 }
 
 #[test]
-#[ignore]
-fn test_parse_scheme_works_when_full_url() {
+fn test_parse_scheme_works_when_simple_address() {
     use crate::url::*;
-    let _input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}{}", protocol, "foo.bar");
         let url = Parser::new(None).parse(address);
