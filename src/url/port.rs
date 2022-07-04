@@ -11,7 +11,7 @@ impl Parser {
         if position_colon.is_some() {
             let _before = &input[..position_colon.unwrap()];
             let after = &input[position_colon.unwrap() + 1..];
-            let re = Regex::new(r"(\d+)/.*").unwrap();
+            let re = Regex::new(r"(\d+).*").unwrap();
             let caps = re.captures(after);
             if caps.is_none() {
                 return None;

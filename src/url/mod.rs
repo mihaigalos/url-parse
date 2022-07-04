@@ -159,7 +159,7 @@ fn test_parse_works_when_user_login() {
         result,
         Url {
             scheme: Some("scp".to_string()),
-            user_pass: (Some("user".to_string()), Some("".to_string())),
+            user_pass: (Some("user".to_string()), None),
             top_level_domain: Some("example".to_string()),
             domain: Some("co.uk".to_string()),
             port: Some(22),
