@@ -29,12 +29,44 @@ pub struct Parser {
 }
 
 impl Parser {
+    /// Create a new parser object. Optionally pass in a hash map of default port mappings.
+    /// Its fields are then directly accessible.
+    ///
+    /// # Example
+    /// ```rust,no_run
+    /// let parser = Parser::new(None).parse(input).unwrap();
+    /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
         Parser {
             default_port_mappings: port_mappings.unwrap_or(default_port_mappings()),
         }
     }
 
+    /// Create a new parser object with `Parser::new()`. You can then use `parser.parse(url)` which will return a public `Url` parsed structure back.
+    /// Its fields are then directly accessible.
+    ///
+    /// # Example
+    /// ```rust,no_run
+    /// let input = "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let result = Parser::new(None).parse(input).unwrap();
+    /// assert_eq!(
+    ///     result,
+    ///     Url {
+    ///         scheme: Some("https".to_string()),
+    ///         user_pass: (Some("user".to_string()), Some("pass".to_string())),
+    ///         top_level_domain: Some("www".to_string()),
+    ///         domain: Some("example.co.uk".to_string()),
+    ///         port: Some(443),
+    ///         path: Some(vec![
+    ///             "blog".to_string(),
+    ///             "article".to_string(),
+    ///             "search".to_string(),
+    ///         ]),
+    ///         query: Some("docid=720&hl=en#dayone".to_string()),
+    ///         anchor: Some("dayone".to_string()),
+    ///     }
+    /// )
+    /// ```
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
         let scheme = self.mixout_scheme(url);
         let user_pass = self.mixout_login(url);
