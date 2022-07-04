@@ -4,7 +4,7 @@ A Rust library for parsing URLs.
 
 ## Why?
 
-Currently, [url](https://crates.io/crates/url) does not provide support for i.e. special schemes. The reasoning isn't listed in the [whatwg](https://url.spec.whatwg.org/#url-miscellaneous) standard.
+Currently, [url](https://crates.io/crates/url) does not provide support for i.e. special schemes. That's because they aren't listed in the [whatwg](https://url.spec.whatwg.org/#url-miscellaneous) standard.
 
 `url-parse` provides some missing schemes (`sftp`, `ssh`, `s3`) and enables the user to specify custom schemes before parsing.
 
