@@ -46,6 +46,13 @@ impl Utils {
 
         return input.get(..pos_port).unwrap();
     }
+    pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> &'a str {
+        let input = Utils::substring_after_scheme(&parser, input);
+        match input.find("/") {
+            Some(pos) => &input[pos..],
+            None => input,
+        }
+    }
 }
 
 #[test]
@@ -98,5 +105,25 @@ fn test_substring_after_login_works_when_typical() {
     let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
     let parser = Parser::new(None);
     let result = Utils::substring_after_login(&parser, input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_substring_from_path_begin_works_when_typical() {
+    use crate::url::*;
+    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
+    let parser = Parser::new(None);
+    let result = Utils::substring_from_path_begin(&parser, input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_substring_from_path_begin_works_when_no_port() {
+    use crate::url::*;
+    let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+    let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
+    let parser = Parser::new(None);
+    let result = Utils::substring_from_path_begin(&parser, input);
     assert_eq!(result, expected);
 }
