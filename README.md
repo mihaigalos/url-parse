@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/mihaigalos/url-parse/branch/main/graph/badge.svg?token=crukaI8Gmf)](https://codecov.io/gh/mihaigalos/url-parse)
 [![crates.io](https://img.shields.io/crates/d/url-parse.svg)](https://crates.io/crates/url-parse)
 
-A Rust library for parsing URLs.
+A library for parsing URLs.
 
 ## Why?
 
