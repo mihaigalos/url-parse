@@ -6,11 +6,10 @@ impl Utils {
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let scheme = parser.mixout_scheme(input);
         let double_slash_length = 2;
-        let rest = match scheme.clone() {
+        match scheme.clone() {
             Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
             None => input,
-        };
-        return rest;
+        }
     }
 
     pub fn substring_after_login<'a>(parser: &Parser, input: &'a str) -> &'a str {
