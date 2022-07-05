@@ -77,7 +77,7 @@ impl Parser {
         let port = self.mixout_port(url);
         let path = self.mixout_path(url);
         let query = self.mixout_query(url);
-        let anchor = self.mixout_anchor(url);
+        let anchor = self.mixout_anchor(url).map(|s| s.to_string());
         Ok(Url {
             scheme: scheme,
             user_pass: user_pass,
