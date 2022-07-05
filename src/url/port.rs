@@ -5,13 +5,6 @@ use crate::utils::Utils;
 
 impl Parser {
     pub fn mixout_port<'a>(&self, input: &'a str) -> Option<u32> {
-        let default_port = match self.mixout_scheme(&input.to_string()) {
-            Some(v) => {
-                let (port, _) = self.default_port_mappings[&v.as_ref()];
-                Some(port)
-            }
-            None => None,
-        };
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(":");
         if position_colon.is_some() {
@@ -38,6 +31,13 @@ impl Parser {
             };
             return port;
         }
+        let default_port = match self.mixout_scheme(&input.to_string()) {
+            Some(v) => {
+                let (port, _) = self.default_port_mappings[&v.as_ref()];
+                Some(port)
+            }
+            None => None,
+        };
 
         default_port
     }
