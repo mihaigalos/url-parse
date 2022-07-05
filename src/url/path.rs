@@ -2,7 +2,7 @@ use crate::url::Parser;
 use crate::utils::Utils;
 
 impl Parser {
-    pub fn mixout_path<'a>(&self, input: &str) -> Option<Vec<String>> {
+    pub fn mixout_path<'a>(&self, input: &'a str) -> Option<Vec<&'a str>> {
         let input = Utils::substring_from_path_begin(self, input);
         let input = Utils::substring_after_port(self, input);
         let input = match input.chars().nth(0) {
@@ -14,12 +14,7 @@ impl Parser {
             Some(v) => &input[..v],
             None => input,
         };
-        return Some(
-            path_string
-                .split("/")
-                .map(|s| s.to_string())
-                .collect::<Vec<String>>(),
-        );
+        return Some(path_string.split("/").collect());
     }
 }
 

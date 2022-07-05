@@ -75,8 +75,10 @@ impl Parser {
         let user_pass = self.mixout_login(url);
         let domain_fields = self.mixout_domain_fields(url);
         let port = self.mixout_port(url);
-        let path = self.mixout_path(url);
-        let query = self.mixout_query(url);
+        let path = self
+            .mixout_path(url)
+            .map(|x| x.iter().map(|s| s.to_string()).collect());
+        let query = self.mixout_query(url).map(|s| s.to_string());
         let anchor = self.mixout_anchor(url).map(|s| s.to_string());
         Ok(Url {
             scheme: scheme,

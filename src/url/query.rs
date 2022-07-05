@@ -1,11 +1,11 @@
 use crate::url::Parser;
 
 impl Parser {
-    pub fn mixout_query<'a>(&self, input: &'a str) -> Option<String> {
+    pub fn mixout_query<'a>(&self, input: &'a str) -> Option<&'a str> {
         let position_questionmark = input.find("?");
         if position_questionmark.is_some() {
             let after = &input[position_questionmark.unwrap() + 1..];
-            return Some(after.to_string());
+            return Some(after);
         }
         None
     }
