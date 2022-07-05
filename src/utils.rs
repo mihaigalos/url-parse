@@ -72,7 +72,6 @@ fn test_substring_after_port_works_when_typical() {
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
     let parser = Parser::new(None);
-    let input = Utils::substring_after_scheme(&parser, input);
     let result = Utils::substring_after_port(&parser, input);
     assert_eq!(result, expected);
 }
@@ -83,7 +82,6 @@ fn test_substring_after_port_works_when_no_scheme() {
     let input = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
     let parser = Parser::new(None);
-    let input = Utils::substring_after_scheme(&parser, input);
     let result = Utils::substring_after_port(&parser, input);
     assert_eq!(result, expected);
 }
@@ -125,5 +123,15 @@ fn test_substring_from_path_begin_works_when_no_port() {
     let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
     let parser = Parser::new(None);
     let result = Utils::substring_from_path_begin(&parser, input);
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_substring_after_port_works_when_colon_in_url() {
+    use crate::url::*;
+    let input = "http://en.wikipedia.org/wiki/Template:Welcome";
+    let expected = "en.wikipedia.org/wiki/Template:Welcome".to_string();
+    let parser = Parser::new(None);
+    let result = Utils::substring_after_port(&parser, input);
     assert_eq!(result, expected);
 }

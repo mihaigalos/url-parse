@@ -84,3 +84,10 @@ fn test_mixout_port_works_when_login_and_no_port_with_numbers() {
     let result = Parser::new(None).mixout_port(input);
     assert!(result.is_none());
 }
+
+#[test]
+fn test_mixout_port_works_when_colon_in_url() {
+    let input = "http://en.wikipedia.org/wiki/Template:Welcome";
+    let result = Parser::new(None).mixout_port(input);
+    assert!(result.is_none());
+}
