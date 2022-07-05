@@ -126,12 +126,7 @@ fn test_parse_scheme_works_when_typical() {
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}://{}", protocol, "foo.bar");
         let url = Parser::new(None).parse(address).unwrap();
-        assert!(
-            &url.scheme.as_ref().unwrap() == protocol,
-            "{} != {}",
-            &url.scheme.as_ref().unwrap(),
-            protocol
-        );
+        assert!(&url.scheme.as_ref().unwrap() == protocol);
     }
 }
 
