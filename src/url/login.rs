@@ -12,20 +12,17 @@ impl Parser {
 
         let re = Regex::new(r"(.*)@(.*).*").unwrap();
         let caps = re.captures(input);
-        if caps.is_some() {
-            let caps = caps.unwrap();
-            return if caps.len() > 1 {
-                let user_with_pass = caps.get(1).unwrap().as_str();
-                let (user, pass) = match user_with_pass.find(":") {
-                    Some(v) => (Some(&user_with_pass[..v]), Some(&user_with_pass[v + 1..])),
-                    None => (Some(user_with_pass), None),
-                };
-                (user, pass)
-            } else {
-                (None, None)
-            };
+        if caps.is_none() {
+            return (None, None);
         }
-        (None, None)
+
+        let caps = caps.unwrap();
+        let user_with_pass = caps.get(1).unwrap().as_str();
+        let (user, pass) = match user_with_pass.find(":") {
+            Some(v) => (Some(&user_with_pass[..v]), Some(&user_with_pass[v + 1..])),
+            None => (Some(user_with_pass), None),
+        };
+        (user, pass)
     }
 }
 
