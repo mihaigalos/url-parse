@@ -5,7 +5,6 @@ use crate::utils::Utils;
 
 impl Parser {
     pub fn mixout_port<'a>(&self, input: &'a str) -> Option<u32> {
-        let scheme = self.mixout_scheme(input);
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(":");
         if position_colon.is_some() {
@@ -18,28 +17,17 @@ impl Parser {
             }
             let caps = caps.unwrap();
 
-            let port = if caps.len() > 1 {
-                Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap())
-            } else if caps.len() == 1 {
-                let re = Regex::new(r"^(\d+)$").unwrap();
-                let caps = re.captures(after).unwrap();
-                if caps.len() == 1 {
-                    Some(caps.get(0).unwrap().as_str().trim().parse::<u32>().unwrap());
-                }
-                None
-            } else {
-                None
-            };
-            return port;
+            return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
-
-        return match scheme {
+        let default_port = match self.mixout_scheme(&input.to_string()) {
             Some(v) => {
                 let (port, _) = self.default_port_mappings[&v.as_ref()];
                 Some(port)
             }
             None => None,
         };
+
+        default_port
     }
 }
 

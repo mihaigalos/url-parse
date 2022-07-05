@@ -1,11 +1,11 @@
 use crate::url::Parser;
 
 impl Parser {
-    pub fn mixout_scheme<'a>(&self, input: &'a str) -> Option<String> {
+    pub fn mixout_scheme<'a>(&self, input: &'a str) -> Option<&'a str> {
         let split: Vec<&str> = input.split("://").collect();
 
         match split.len() {
-            2 => return Some(split[0].to_string()),
+            2 => return Some(split[0]),
             _ => return None,
         };
     }

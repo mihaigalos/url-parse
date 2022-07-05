@@ -71,18 +71,24 @@ impl Parser {
     /// )
     /// ```
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
-        let scheme = self.mixout_scheme(url);
+        let scheme = self.mixout_scheme(url).map(|s| s.to_string());
         let user_pass = self.mixout_login(url);
+        let user_pass = (
+            user_pass.0.map(|s| s.to_string()),
+            user_pass.1.map(|s| s.to_string()),
+        );
         let domain_fields = self.mixout_domain_fields(url);
         let port = self.mixout_port(url);
-        let path = self.mixout_path(url);
-        let query = self.mixout_query(url);
-        let anchor = self.mixout_anchor(url);
+        let path = self
+            .mixout_path(url)
+            .map(|x| x.iter().map(|s| s.to_string()).collect());
+        let query = self.mixout_query(url).map(|s| s.to_string());
+        let anchor = self.mixout_anchor(url).map(|s| s.to_string());
         Ok(Url {
             scheme: scheme,
             user_pass: user_pass,
-            top_level_domain: domain_fields.top_level_domain,
-            domain: domain_fields.domain,
+            top_level_domain: domain_fields.top_level_domain.map(|s| s.to_string()),
+            domain: domain_fields.domain.map(|s| s.to_string()),
             port: port,
             path: path,
             query: query,
@@ -120,12 +126,7 @@ fn test_parse_scheme_works_when_typical() {
     for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
         let address = &format!("{}://{}", protocol, "foo.bar");
         let url = Parser::new(None).parse(address).unwrap();
-        assert!(
-            &url.scheme.as_ref().unwrap() == protocol,
-            "{} != {}",
-            &url.scheme.as_ref().unwrap(),
-            protocol
-        );
+        assert!(&url.scheme.as_ref().unwrap() == protocol);
     }
 }
 
