@@ -71,7 +71,7 @@ impl Parser {
     /// )
     /// ```
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
-        let scheme = self.mixout_scheme(url);
+        let scheme = self.mixout_scheme(url).map(|s| s.to_string());
         let user_pass = self.mixout_login(url);
         let user_pass = (
             user_pass.0.map(|s| s.to_string()),
