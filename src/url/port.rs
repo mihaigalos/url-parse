@@ -19,13 +19,6 @@ impl Parser {
 
             let port = if caps.len() > 1 {
                 Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap())
-            } else if caps.len() == 1 {
-                let re = Regex::new(r"^(\d+)$").unwrap();
-                let caps = re.captures(after).unwrap();
-                if caps.len() == 1 {
-                    Some(caps.get(0).unwrap().as_str().trim().parse::<u32>().unwrap());
-                }
-                None
             } else {
                 None
             };
