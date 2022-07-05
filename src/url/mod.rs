@@ -83,8 +83,8 @@ impl Parser {
         Ok(Url {
             scheme: scheme,
             user_pass: user_pass,
-            top_level_domain: domain_fields.top_level_domain,
-            domain: domain_fields.domain,
+            top_level_domain: domain_fields.top_level_domain.map(|s| s.to_string()),
+            domain: domain_fields.domain.map(|s| s.to_string()),
             port: port,
             path: path,
             query: query,
