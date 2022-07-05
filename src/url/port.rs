@@ -17,12 +17,7 @@ impl Parser {
             }
             let caps = caps.unwrap();
 
-            let port = if caps.len() > 1 {
-                Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap())
-            } else {
-                None
-            };
-            return port;
+            return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
         let default_port = match self.mixout_scheme(&input.to_string()) {
             Some(v) => {
