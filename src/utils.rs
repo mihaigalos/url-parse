@@ -3,6 +3,20 @@ use crate::url::Parser;
 pub struct Utils;
 
 impl Utils {
+    /// Get substring immediately after scheme.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input =
+    ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected =
+    ///     "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    /// let parser = Parser::new(None);
+    /// let result = Utils::substring_after_scheme(&parser, input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let scheme = parser.mixout_scheme(input);
         let double_slash_length = 2;
@@ -12,6 +26,19 @@ impl Utils {
         }
     }
 
+    /// Get substring immediately after login. Eliminates scheme to ensure no colon present in remainder.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input =
+    ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    /// let parser = Parser::new(None);
+    /// let result = Utils::substring_after_login(&parser, input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn substring_after_login<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let input = Utils::substring_after_scheme(&parser, input);
         match input.find("@") {
@@ -20,6 +47,19 @@ impl Utils {
         }
     }
 
+    /// Get substring immediately after port. Eliminates scheme to ensure no colon present in remainder.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input =
+    ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    /// let parser = Parser::new(None);
+    /// let result = Utils::substring_after_login(&parser, input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn substring_after_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let input = Utils::substring_after_scheme(&parser, input);
         let port = parser.mixout_port(input);
@@ -35,6 +75,18 @@ impl Utils {
         return input;
     }
 
+    /// Get substring immediately before port.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "https://www.example.co.uk".to_string();
+    /// let parser = Parser::new(None);
+    /// let result = Utils::substring_before_port(&parser, input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn substring_before_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let port = parser.mixout_port(input);
 
@@ -45,6 +97,21 @@ impl Utils {
 
         return input.get(..pos_port).unwrap();
     }
+
+    /// Get substring before path. Eliminates scheme to ensure no colon present in remainder.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input =
+    ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected =
+    ///     "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    /// let parser = Parser::new(None);
+    /// let result = Utils::substring_after_scheme(&parser, input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let input = Utils::substring_after_scheme(&parser, input);
         match input.find("/") {
