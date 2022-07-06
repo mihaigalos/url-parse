@@ -3,6 +3,17 @@ use crate::utils::Utils;
 use regex::Regex;
 
 impl Parser {
+    /// Extract the domain fields from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// let input = "https://user:pass@www.example.co.uk";
+    /// let expected = (Some("user"), Some("pass"));
+    /// let result = Parser::new(None).mixout_login(input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn mixout_login<'a>(&self, input: &'a str) -> (Option<&'a str>, Option<&'a str>) {
         let input = Utils::substring_after_scheme(self, input);
         let input = match input.find("/") {

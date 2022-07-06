@@ -7,6 +7,7 @@ mod port;
 mod query;
 mod scheme;
 
+pub mod global;
 use crate::error::ParseError;
 use crate::url::defaults::*;
 

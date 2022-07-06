@@ -1,20 +1,24 @@
+use crate::url::global::DomainFields;
 use crate::url::Parser;
 use crate::utils::Utils;
 use regex::Regex;
 
-#[derive(Debug)]
-pub struct DomainFields<'a> {
-    pub top_level_domain: Option<&'a str>,
-    pub domain: Option<&'a str>,
-}
-
-impl<'a> PartialEq for DomainFields<'a> {
-    fn eq(&self, other: &Self) -> bool {
-        return self.top_level_domain == other.top_level_domain && self.domain == other.domain;
-    }
-}
-
 impl Parser {
+    /// Extract the domain fields from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::utils::Utils;
+    /// use url_parse::url::Parser;
+    /// use url_parse::url::global::DomainFields;
+    /// let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = DomainFields {
+    ///     top_level_domain: Some("www"),
+    ///     domain: Some("example.com"),
+    /// };
+    /// let result = Parser::new(None).mixout_domain_fields(input);
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn mixout_domain_fields<'a>(&self, input: &'a str) -> DomainFields<'a> {
         let input = Utils::substring_after_login(self, input);
         let input = Utils::substring_before_port(self, input);
