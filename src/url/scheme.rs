@@ -1,6 +1,15 @@
 use crate::url::Parser;
 
 impl Parser {
+    /// Extract the query from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::url::Parser;
+    /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let scheme = Parser::new(None).mixout_scheme(input);
+    /// assert_eq!(scheme.unwrap(), "https");
+    /// ```
     pub fn mixout_scheme<'a>(&self, input: &'a str) -> Option<&'a str> {
         let split: Vec<&str> = input.split("://").collect();
 

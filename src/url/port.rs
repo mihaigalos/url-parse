@@ -4,6 +4,16 @@ use crate::url::Parser;
 use crate::utils::Utils;
 
 impl Parser {
+    /// Extract the port from the url. If no port is present, it will be deduced from the scheme.
+    /// The default scheme provides well-known ports. The user can specify new schemes when constructing the Parser object with `new()`.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::url::Parser;
+    /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let port = Parser::new(None).mixout_port(input);
+    /// assert_eq!(port.unwrap(), 443);
+    /// ```
     pub fn mixout_port<'a>(&self, input: &'a str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(":");

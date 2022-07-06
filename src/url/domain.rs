@@ -8,7 +8,6 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::utils::Utils;
     /// use url_parse::url::Parser;
     /// use url_parse::url::global::DomainFields;
     /// let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";

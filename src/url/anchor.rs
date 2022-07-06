@@ -5,7 +5,6 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::utils::Utils;
     /// use url_parse::url::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let result = Parser::new(None).mixout_anchor(input).unwrap();

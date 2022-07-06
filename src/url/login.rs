@@ -7,7 +7,6 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::utils::Utils;
     /// use url_parse::url::Parser;
     /// let input = "https://user:pass@www.example.co.uk";
     /// let expected = (Some("user"), Some("pass"));
