@@ -41,51 +41,60 @@ impl Parser {
     }
 }
 
-#[test]
-fn test_mixout_port_works_when_typical() {
-    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let port = Parser::new(None).mixout_port(input);
-    assert_eq!(port.unwrap(), 443);
-}
+mod tests {
+    #[test]
+    fn test_mixout_port_works_when_typical() {
+        use crate::url::*;
+        let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+        let port = Parser::new(None).mixout_port(input);
+        assert_eq!(port.unwrap(), 443);
+    }
 
-#[test]
-fn test_mixout_port_works_when_no_path() {
-    let input = "https://www.example.co.uk:443";
-    let port = Parser::new(None).mixout_port(input);
-    assert_eq!(port.unwrap(), 443);
-}
-#[test]
-fn test_mixout_port_default_works_when_https() {
-    use crate::url::Parser;
-    let input = "https://www.example.co.uk";
-    let port = Parser::new(None).mixout_port(input);
-    assert!(port.is_some());
-    assert_eq!(port.unwrap(), 443);
-}
+    #[test]
+    fn test_mixout_port_works_when_no_path() {
+        use crate::url::*;
+        let input = "https://www.example.co.uk:443";
+        let port = Parser::new(None).mixout_port(input);
+        assert_eq!(port.unwrap(), 443);
+    }
+    #[test]
+    fn test_mixout_port_default_works_when_https() {
+        use crate::url::*;
+        let input = "https://www.example.co.uk";
+        let port = Parser::new(None).mixout_port(input);
+        assert!(port.is_some());
+        assert_eq!(port.unwrap(), 443);
+    }
 
-#[test]
-fn test_mixout_port_works_when_default_port_login_and_no_port() {
-    let input = "https://user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-    let result = Parser::new(None).mixout_port(input).unwrap();
-    assert_eq!(result, 443);
-}
-#[test]
-fn test_mixout_port_works_when_login_and_no_port() {
-    let input = "user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-    let result = Parser::new(None).mixout_port(input);
-    assert!(result.is_none());
-}
+    #[test]
+    fn test_mixout_port_works_when_default_port_login_and_no_port() {
+        use crate::url::*;
+        let input =
+            "https://user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+        let result = Parser::new(None).mixout_port(input).unwrap();
+        assert_eq!(result, 443);
+    }
+    #[test]
+    fn test_mixout_port_works_when_login_and_no_port() {
+        use crate::url::*;
+        let input = "user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
+        let result = Parser::new(None).mixout_port(input);
+        assert!(result.is_none());
+    }
 
-#[test]
-fn test_mixout_port_works_when_login_and_no_port_with_numbers() {
-    let input = "user:pass@www.example.co.uk/blog/article/720/test.txt";
-    let result = Parser::new(None).mixout_port(input);
-    assert!(result.is_none());
-}
+    #[test]
+    fn test_mixout_port_works_when_login_and_no_port_with_numbers() {
+        use crate::url::*;
+        let input = "user:pass@www.example.co.uk/blog/article/720/test.txt";
+        let result = Parser::new(None).mixout_port(input);
+        assert!(result.is_none());
+    }
 
-#[test]
-fn test_mixout_port_works_when_colon_in_url() {
-    let input = "http://en.wikipedia.org/wiki/Template:Welcome";
-    let result = Parser::new(None).mixout_port(input);
-    assert!(result.is_none());
+    #[test]
+    fn test_mixout_port_works_when_colon_in_url() {
+        use crate::url::*;
+        let input = "http://en.wikipedia.org/wiki/Template:Welcome";
+        let result = Parser::new(None).mixout_port(input);
+        assert!(result.is_none());
+    }
 }

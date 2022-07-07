@@ -20,10 +20,12 @@ impl Parser {
     }
 }
 
-#[test]
-fn test_mixout_query_works_when_typical() {
-    use crate::url::*;
-    let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    let result = Parser::new(None).mixout_query(input).unwrap();
-    assert_eq!(result, "docid=720&hl=en#dayone");
+mod tests {
+    #[test]
+    fn test_mixout_query_works_when_typical() {
+        use crate::url::*;
+        let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+        let result = Parser::new(None).mixout_query(input).unwrap();
+        assert_eq!(result, "docid=720&hl=en#dayone");
+    }
 }
