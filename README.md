@@ -29,7 +29,7 @@ assert_eq!(
     Url {
         scheme: Some("https".to_string()),
         user_pass: (Some("user".to_string()), Some("pass".to_string())),
-        top_level_domain: Some("www".to_string()),
+        subdomain: Some("www".to_string()),
         domain: Some("example.co.uk".to_string()),
         port: Some(443),
         path: Some(vec![
@@ -59,7 +59,7 @@ assert_eq!(
     Url {
         scheme: Some("myschema".to_string()),
         user_pass: (Some("user".to_string()), Some("pass".to_string())),
-        top_level_domain: Some("example".to_string()),
+        subdomain: Some("example".to_string()),
         domain: Some("co.uk".to_string()),
         port: Some(8888),
         path: Some(vec![

@@ -17,7 +17,7 @@ use std::collections::HashMap;
 pub struct Url {
     pub scheme: Option<String>,
     pub user_pass: (Option<String>, Option<String>),
-    pub top_level_domain: Option<String>,
+    pub subdomain: Option<String>,
     pub domain: Option<String>,
     pub port: Option<u32>,
     pub path: Option<Vec<String>>,
@@ -58,7 +58,7 @@ impl Parser {
     ///     Url {
     ///         scheme: Some("https".to_string()),
     ///         user_pass: (Some("user".to_string()), Some("pass".to_string())),
-    ///         top_level_domain: Some("www".to_string()),
+    ///         subdomain: Some("www".to_string()),
     ///         domain: Some("example.co.uk".to_string()),
     ///         port: Some(443),
     ///         path: Some(vec![
@@ -88,7 +88,7 @@ impl Parser {
         Ok(Url {
             scheme: scheme,
             user_pass: user_pass,
-            top_level_domain: domain_fields.top_level_domain.map(|s| s.to_string()),
+            subdomain: domain_fields.subdomain.map(|s| s.to_string()),
             domain: domain_fields.domain.map(|s| s.to_string()),
             port: port,
             path: path,
@@ -102,7 +102,7 @@ impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
             && self.user_pass == other.user_pass
-            && self.top_level_domain == other.top_level_domain
+            && self.subdomain == other.subdomain
             && self.domain == other.domain
             && self.port == other.port
             && self.path == other.path
@@ -150,7 +150,7 @@ fn test_parse_works_when_full_url() {
         Url {
             scheme: Some("https".to_string()),
             user_pass: (None, None),
-            top_level_domain: Some("www".to_string()),
+            subdomain: Some("www".to_string()),
             domain: Some("example.co.uk".to_string()),
             port: Some(443),
             path: Some(vec![
@@ -174,7 +174,7 @@ fn test_parse_works_when_full_url_with_login() {
         Url {
             scheme: Some("https".to_string()),
             user_pass: (Some("user".to_string()), Some("pass".to_string())),
-            top_level_domain: Some("www".to_string()),
+            subdomain: Some("www".to_string()),
             domain: Some("example.co.uk".to_string()),
             port: Some(443),
             path: Some(vec![
@@ -197,7 +197,7 @@ fn test_parse_works_when_user_login() {
         Url {
             scheme: Some("scp".to_string()),
             user_pass: (Some("user".to_string()), None),
-            top_level_domain: Some("example".to_string()),
+            subdomain: Some("example".to_string()),
             domain: Some("co.uk".to_string()),
             port: Some(22),
             path: Some(vec![
@@ -220,7 +220,7 @@ fn test_parse_works_when_user_login_no_port() {
         Url {
             scheme: Some("scp".to_string()),
             user_pass: (Some("user".to_string()), None),
-            top_level_domain: Some("example".to_string()),
+            subdomain: Some("example".to_string()),
             domain: Some("co.uk".to_string()),
             port: Some(22),
             path: Some(vec![
@@ -245,7 +245,7 @@ fn test_parse_works_when_custom_port_mappings_full_login() {
         Url {
             scheme: Some("myschema".to_string()),
             user_pass: (Some("user".to_string()), Some("pass".to_string())),
-            top_level_domain: Some("example".to_string()),
+            subdomain: Some("example".to_string()),
             domain: Some("co.uk".to_string()),
             port: Some(8888),
             path: Some(vec![

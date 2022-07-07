@@ -12,7 +12,7 @@ impl Parser {
     /// use url_parse::url::global::DomainFields;
     /// let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected = DomainFields {
-    ///     top_level_domain: Some("www"),
+    ///     subdomain: Some("www"),
     ///     domain: Some("example.com"),
     /// };
     /// let result = Parser::new(None).mixout_domain_fields(input);
@@ -28,7 +28,7 @@ impl Parser {
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input).unwrap();
         return DomainFields {
-            top_level_domain: Some(caps.get(1).unwrap().as_str()),
+            subdomain: Some(caps.get(1).unwrap().as_str()),
             domain: Some(caps.get(2).unwrap().as_str()),
         };
     }
@@ -39,7 +39,7 @@ fn test_mixout_domain_fields_works_when_typical() {
     use crate::url::*;
     let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = DomainFields {
-        top_level_domain: Some("www"),
+        subdomain: Some("www"),
         domain: Some("example.com"),
     };
     let result = Parser::new(None).mixout_domain_fields(input);
@@ -47,11 +47,11 @@ fn test_mixout_domain_fields_works_when_typical() {
 }
 
 #[test]
-fn test_mixout_domain_fields_works_when_no_top_level_domain() {
+fn test_mixout_domain_fields_works_when_no_subdomain() {
     use crate::url::*;
     let input = "https://example.com:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = DomainFields {
-        top_level_domain: Some("example"),
+        subdomain: Some("example"),
         domain: Some("com"),
     };
     let result = Parser::new(None).mixout_domain_fields(input);
@@ -63,7 +63,7 @@ fn test_mixout_domain_fields_works_when_typical_long_subdomain() {
     use crate::url::*;
     let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     let expected = DomainFields {
-        top_level_domain: Some("www"),
+        subdomain: Some("www"),
         domain: Some("example.co.uk"),
     };
     let result = Parser::new(None).mixout_domain_fields(input);
@@ -75,7 +75,7 @@ fn test_mixout_domain_fields_works_when_no_port() {
     use crate::url::*;
     let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
     let expected = DomainFields {
-        top_level_domain: Some("www"),
+        subdomain: Some("www"),
         domain: Some("example.co.uk"),
     };
     let result = Parser::new(None).mixout_domain_fields(input);
