@@ -8,6 +8,7 @@ on:
       - '**/Cargo.toml'
       - '**/Cargo.lock'
       - '**/audit.toml'
+  workflow_dispatch: # Run with Run Workflow button in GitHub Action Job, set debug_enabled=true for interactive ssh session.
 
 jobs:
   audit:
