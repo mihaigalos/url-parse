@@ -121,11 +121,12 @@ impl Utils {
     }
 }
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_substring_after_scheme_works_when_typical() {
-        use crate::url::*;
-        use crate::utils::*;
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone"
@@ -137,8 +138,6 @@ mod tests {
 
     #[test]
     fn test_substring_after_port_works_when_typical() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
@@ -148,8 +147,6 @@ mod tests {
 
     #[test]
     fn test_substring_after_port_works_when_no_scheme() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
@@ -159,8 +156,6 @@ mod tests {
 
     #[test]
     fn test_substring_before_port_works_when_typical() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "https://www.example.co.uk".to_string();
         let parser = Parser::new(None);
@@ -170,8 +165,6 @@ mod tests {
 
     #[test]
     fn test_substring_after_login_works_when_typical() {
-        use crate::url::*;
-        use crate::utils::*;
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected =
@@ -183,8 +176,6 @@ mod tests {
 
     #[test]
     fn test_substring_from_path_begin_works_when_typical() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
@@ -194,8 +185,6 @@ mod tests {
 
     #[test]
     fn test_substring_from_path_begin_works_when_no_port() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
@@ -205,8 +194,6 @@ mod tests {
 
     #[test]
     fn test_substring_after_port_works_when_colon_in_url() {
-        use crate::url::*;
-        use crate::utils::*;
         let input = "http://en.wikipedia.org/wiki/Template:Welcome";
         let expected = "en.wikipedia.org/wiki/Template:Welcome".to_string();
         let parser = Parser::new(None);

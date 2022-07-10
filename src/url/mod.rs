@@ -111,10 +111,12 @@ impl PartialEq for Url {
     }
 }
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_parse_works_when_typical() {
-        use crate::url::*;
         use defaults::DEFAULT_PORT_MAPPINGS;
         for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
@@ -125,7 +127,6 @@ mod tests {
 
     #[test]
     fn test_parse_scheme_works_when_typical() {
-        use crate::url::*;
         use defaults::DEFAULT_PORT_MAPPINGS;
         for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
             let address = &format!("{}://{}", protocol, "foo.bar");
@@ -136,7 +137,6 @@ mod tests {
 
     #[test]
     fn test_parse_scheme_works_when_no_scheme_in_url() {
-        use crate::url::*;
         use defaults::DEFAULT_PORT_MAPPINGS;
         for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
@@ -147,7 +147,6 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_full_url() {
-        use crate::url::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let result = Parser::new(None).parse(input).unwrap();
         assert_eq!(
@@ -171,7 +170,6 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_full_url_with_login() {
-        use crate::url::*;
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let result = Parser::new(None).parse(input).unwrap();
@@ -196,7 +194,6 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_user_login() {
-        use crate::url::*;
         let input = "scp://user@example.co.uk:22/path/to/file.txt";
         let result = Parser::new(None).parse(input).unwrap();
         assert_eq!(
@@ -220,7 +217,6 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_user_login_no_port() {
-        use crate::url::*;
         let input = "scp://user@example.co.uk/path/to/file.txt";
         let result = Parser::new(None).parse(input).unwrap();
         assert_eq!(
@@ -244,7 +240,6 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_custom_port_mappings_full_login() {
-        use crate::url::*;
         let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
         let mut myport_mappings = HashMap::new();
         myport_mappings.insert("myschema", (8888, "My custom schema"));

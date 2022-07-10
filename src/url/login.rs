@@ -36,10 +36,12 @@ impl Parser {
     }
 }
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_mixout_login_works_when_full_url_with_login() {
-        use crate::url::*;
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = (Some("user"), Some("pass"));
@@ -49,7 +51,6 @@ mod tests {
 
     #[test]
     fn test_mixout_login_works_when_full_url_no_port() {
-        use crate::url::*;
         let input =
             "https://user:pass@www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let expected = (Some("user"), Some("pass"));
@@ -59,7 +60,6 @@ mod tests {
 
     #[test]
     fn test_mixout_login_works_when_full_url_no_port_no_path() {
-        use crate::url::*;
         let input = "https://user:pass@www.example.co.uk";
         let expected = (Some("user"), Some("pass"));
         let result = Parser::new(None).mixout_login(input);
@@ -68,7 +68,6 @@ mod tests {
 
     #[test]
     fn test_mixout_login_works_when_user_only() {
-        use crate::url::*;
         let input = "https://user@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = (Some("user"), None);
         let result = Parser::new(None).mixout_login(input);
@@ -77,7 +76,6 @@ mod tests {
 
     #[test]
     fn test_mixout_login_works_when_user_only_no_port_no_path() {
-        use crate::url::*;
         let input = "https://user@www.example.co.uk";
         let expected = (Some("user"), None);
         let result = Parser::new(None).mixout_login(input);
@@ -86,7 +84,6 @@ mod tests {
 
     #[test]
     fn test_mixout_login_works_when_no_login() {
-        use crate::url::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = (None, None);
         let result = Parser::new(None).mixout_login(input);

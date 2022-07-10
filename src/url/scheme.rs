@@ -20,10 +20,13 @@ impl Parser {
     }
 }
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_parse_scheme_works_when_simple_address() {
-        use crate::url::*;
+        use crate::url::defaults::*;
         for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address);
@@ -33,7 +36,6 @@ mod tests {
 
     #[test]
     fn test_mixout_scheme_works_when_typical() {
-        use crate::url::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let scheme = Parser::new(None).mixout_scheme(input);
         assert_eq!(scheme.unwrap(), "https");
@@ -41,7 +43,6 @@ mod tests {
 
     #[test]
     fn test_mixout_scheme_works_when_no_port() {
-        use crate::url::*;
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let scheme = Parser::new(None).mixout_scheme(input);
         assert_eq!(scheme.unwrap(), "https");
@@ -49,7 +50,6 @@ mod tests {
 
     #[test]
     fn test_mixout_scheme_works_when_no_scheme() {
-        use crate::url::*;
         let input = "www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let scheme = Parser::new(None).mixout_scheme(input);
         assert!(scheme.is_none());

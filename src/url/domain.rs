@@ -34,11 +34,12 @@ impl Parser {
     }
 }
 
+#[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_mixout_domain_fields_works_when_typical() {
-        use super::DomainFields;
-        use crate::url::*;
         let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = DomainFields {
             subdomain: Some("www"),
@@ -49,8 +50,6 @@ mod tests {
     }
     #[test]
     fn test_mixout_domain_fields_works_when_no_subdomain() {
-        use super::DomainFields;
-        use crate::url::*;
         let input = "https://example.com:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = DomainFields {
             subdomain: Some("example"),
@@ -61,8 +60,6 @@ mod tests {
     }
     #[test]
     fn test_mixout_domain_fields_works_when_typical_long_subdomain() {
-        use super::DomainFields;
-        use crate::url::*;
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = DomainFields {
             subdomain: Some("www"),
@@ -73,8 +70,6 @@ mod tests {
     }
     #[test]
     fn test_mixout_domain_fields_works_when_no_port() {
-        use super::DomainFields;
-        use crate::url::*;
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let expected = DomainFields {
             subdomain: Some("www"),
