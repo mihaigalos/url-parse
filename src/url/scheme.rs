@@ -27,7 +27,7 @@ mod tests {
     #[test]
     fn test_parse_scheme_works_when_simple_address() {
         use crate::url::defaults::*;
-        for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
+        for (protocol, _) in default_port_mappings().iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address);
             assert!(url.is_ok());

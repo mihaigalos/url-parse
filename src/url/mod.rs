@@ -117,8 +117,7 @@ mod tests {
 
     #[test]
     fn test_parse_works_when_typical() {
-        use defaults::DEFAULT_PORT_MAPPINGS;
-        for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
+        for (protocol, _) in default_port_mappings().iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address);
             assert!(url.is_ok());
@@ -127,8 +126,7 @@ mod tests {
 
     #[test]
     fn test_parse_scheme_works_when_typical() {
-        use defaults::DEFAULT_PORT_MAPPINGS;
-        for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
+        for (protocol, _) in default_port_mappings().iter() {
             let address = &format!("{}://{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address).unwrap();
             assert!(&url.scheme.as_ref().unwrap() == protocol);
@@ -137,8 +135,7 @@ mod tests {
 
     #[test]
     fn test_parse_scheme_works_when_no_scheme_in_url() {
-        use defaults::DEFAULT_PORT_MAPPINGS;
-        for (protocol, _) in DEFAULT_PORT_MAPPINGS.iter() {
+        for (protocol, _) in default_port_mappings().iter() {
             let address = &format!("{}{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address);
             assert!(url.is_ok());
