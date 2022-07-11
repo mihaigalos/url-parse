@@ -27,7 +27,8 @@ impl Parser {
         };
         return self
             .mixout_subdomain_domain(input)
-            .unwrap_or_else(|| self.mixout_domain_ipv4(input).unwrap());
+            .or_else(|| self.mixout_domain_ipv4(input))
+            .unwrap_or_else(|| DomainFields::empty());
     }
 
     fn mixout_subdomain_domain<'a>(&self, input: &'a str) -> Option<DomainFields<'a>> {

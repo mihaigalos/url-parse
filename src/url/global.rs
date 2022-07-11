@@ -9,3 +9,12 @@ impl<'a> PartialEq for DomainFields<'a> {
         return self.subdomain == other.subdomain && self.domain == other.domain;
     }
 }
+
+impl<'a> DomainFields<'a> {
+    pub fn empty() -> DomainFields<'a> {
+        DomainFields {
+            subdomain: None,
+            domain: None,
+        }
+    }
+}
