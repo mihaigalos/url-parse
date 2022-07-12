@@ -102,6 +102,14 @@ mod tests {
     }
 
     #[test]
+    fn test_mixout_domain_fields_fails_when_typical() {
+        let input = "foobar";
+        let expected = DomainFields::empty();
+        let result = Parser::new(None).mixout_domain_fields(input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn test_mixout_domain_fields_works_when_typical() {
         let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = DomainFields {
@@ -146,6 +154,22 @@ mod tests {
             top_level_domain: Some("uk"),
         };
         let result = Parser::new(None).mixout_domain_fields(input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_mixout_subdomain_domain_fails_when_garbage() {
+        let input = "foobar";
+        let expected = None;
+        let result = Parser::new(None).mixout_subdomain_domain(input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_mixout_domain_ipv4_fails_when_garbage() {
+        let input = "foobar";
+        let expected = None;
+        let result = Parser::new(None).mixout_subdomain_domain(input);
         assert_eq!(result, expected);
     }
 }
