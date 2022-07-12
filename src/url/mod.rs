@@ -19,6 +19,7 @@ pub struct Url {
     pub user_pass: (Option<String>, Option<String>),
     pub subdomain: Option<String>,
     pub domain: Option<String>,
+    pub top_level_domain: Option<String>,
     pub port: Option<u32>,
     pub path: Option<Vec<String>>,
     pub query: Option<String>,
@@ -59,7 +60,8 @@ impl Parser {
     ///         scheme: Some("https".to_string()),
     ///         user_pass: (Some("user".to_string()), Some("pass".to_string())),
     ///         subdomain: Some("www".to_string()),
-    ///         domain: Some("example.co.uk".to_string()),
+    ///         domain: Some("example.co".to_string()),
+    ///         top_level_domain: Some("uk".to_string()),
     ///         port: Some(443),
     ///         path: Some(vec![
     ///             "blog".to_string(),
@@ -90,6 +92,7 @@ impl Parser {
             user_pass: user_pass,
             subdomain: domain_fields.subdomain.map(|s| s.to_string()),
             domain: domain_fields.domain.map(|s| s.to_string()),
+            top_level_domain: domain_fields.top_level_domain.map(|s| s.to_string()),
             port: port,
             path: path,
             query: query,
@@ -104,6 +107,7 @@ impl PartialEq for Url {
             && self.user_pass == other.user_pass
             && self.subdomain == other.subdomain
             && self.domain == other.domain
+            && self.top_level_domain == other.top_level_domain
             && self.port == other.port
             && self.path == other.path
             && self.query == other.query
@@ -152,7 +156,8 @@ mod tests {
                 scheme: Some("https".to_string()),
                 user_pass: (None, None),
                 subdomain: Some("www".to_string()),
-                domain: Some("example.co.uk".to_string()),
+                domain: Some("example.co".to_string()),
+                top_level_domain: Some("uk".to_string()),
                 port: Some(443),
                 path: Some(vec![
                     "blog".to_string(),
@@ -176,7 +181,8 @@ mod tests {
                 scheme: Some("https".to_string()),
                 user_pass: (Some("user".to_string()), Some("pass".to_string())),
                 subdomain: Some("www".to_string()),
-                domain: Some("example.co.uk".to_string()),
+                domain: Some("example.co".to_string()),
+                top_level_domain: Some("uk".to_string()),
                 port: Some(443),
                 path: Some(vec![
                     "blog".to_string(),
@@ -199,7 +205,8 @@ mod tests {
                 scheme: Some("scp".to_string()),
                 user_pass: (Some("user".to_string()), None),
                 subdomain: Some("example".to_string()),
-                domain: Some("co.uk".to_string()),
+                domain: Some("co".to_string()),
+                top_level_domain: Some("uk".to_string()),
                 port: Some(22),
                 path: Some(vec![
                     "path".to_string(),
@@ -222,7 +229,8 @@ mod tests {
                 scheme: Some("scp".to_string()),
                 user_pass: (Some("user".to_string()), None),
                 subdomain: Some("example".to_string()),
-                domain: Some("co.uk".to_string()),
+                domain: Some("co".to_string()),
+                top_level_domain: Some("uk".to_string()),
                 port: Some(22),
                 path: Some(vec![
                     "path".to_string(),
@@ -247,7 +255,8 @@ mod tests {
                 scheme: Some("myschema".to_string()),
                 user_pass: (Some("user".to_string()), Some("pass".to_string())),
                 subdomain: Some("example".to_string()),
-                domain: Some("co.uk".to_string()),
+                domain: Some("co".to_string()),
+                top_level_domain: Some("uk".to_string()),
                 port: Some(8888),
                 path: Some(vec![
                     "path".to_string(),
