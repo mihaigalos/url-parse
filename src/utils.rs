@@ -18,7 +18,7 @@ impl Utils {
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let scheme = parser.mixout_scheme(input);
+        let scheme = parser.scheme(input);
         let double_slash_length = 2;
         match scheme.clone() {
             Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
@@ -62,7 +62,7 @@ impl Utils {
     /// ```
     pub fn substring_after_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let input = Utils::substring_after_scheme(&parser, input);
-        let port = parser.mixout_port(input);
+        let port = parser.port(input);
 
         if input.find(":").is_some() {
             let (pos_port, len_port_string) = match port {
@@ -88,7 +88,7 @@ impl Utils {
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_before_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let port = parser.mixout_port(input);
+        let port = parser.port(input);
 
         let pos_port = match port {
             Some(v) => input.find(&v.to_string()).unwrap() - 1,

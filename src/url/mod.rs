@@ -74,19 +74,19 @@ impl Parser {
     /// )
     /// ```
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
-        let scheme = self.mixout_scheme(url).map(|s| s.to_string());
-        let user_pass = self.mixout_login(url);
+        let scheme = self.scheme(url).map(|s| s.to_string());
+        let user_pass = self.login(url);
         let user_pass = (
             user_pass.0.map(|s| s.to_string()),
             user_pass.1.map(|s| s.to_string()),
         );
-        let domain_fields = self.mixout_domain_fields(url);
-        let port = self.mixout_port(url);
+        let domain_fields = self.domain(url);
+        let port = self.port(url);
         let path = self
-            .mixout_path(url)
+            .path(url)
             .map(|x| x.iter().map(|s| s.to_string()).collect());
-        let query = self.mixout_query(url).map(|s| s.to_string());
-        let anchor = self.mixout_anchor(url).map(|s| s.to_string());
+        let query = self.query(url).map(|s| s.to_string());
+        let anchor = self.anchor(url).map(|s| s.to_string());
         Ok(Url {
             scheme: scheme,
             user_pass: user_pass,

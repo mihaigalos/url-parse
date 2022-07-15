@@ -8,11 +8,11 @@ impl Parser {
     /// ```rust
     /// use url_parse::url::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    /// let result = Parser::new(None).mixout_path(input).unwrap();
+    /// let result = Parser::new(None).path(input).unwrap();
     /// let expected = vec!["blog", "article", "search"];
     /// assert_eq!(result, expected);
     /// ```
-    pub fn mixout_path<'a>(&self, input: &'a str) -> Option<Vec<&'a str>> {
+    pub fn path<'a>(&self, input: &'a str) -> Option<Vec<&'a str>> {
         let input = Utils::substring_from_path_begin(self, input);
         let input = Utils::substring_after_port(self, input);
         let input = match input.chars().nth(0) {
@@ -33,33 +33,33 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_mixout_path_works_when_partial_url() {
+    fn test_path_works_when_partial_url() {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let result = Parser::new(None).mixout_path(input).unwrap();
+        let result = Parser::new(None).path(input).unwrap();
         let expected = vec!["blog", "article", "search"];
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_path_works_when_partial_url_starts_with_slash() {
+    fn test_path_works_when_partial_url_starts_with_slash() {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let result = Parser::new(None).mixout_path(input).unwrap();
+        let result = Parser::new(None).path(input).unwrap();
         let expected = vec!["blog", "article", "search"];
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_path_works_when_typical() {
+    fn test_path_works_when_typical() {
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-        let result = Parser::new(None).mixout_path(input).unwrap();
+        let result = Parser::new(None).path(input).unwrap();
         let expected = vec!["blog", "article", "search"];
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_path_works_when_no_port() {
+    fn test_path_works_when_no_port() {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let result = Parser::new(None).mixout_path(input).unwrap();
+        let result = Parser::new(None).path(input).unwrap();
         let expected = vec!["blog", "article", "search"];
         assert_eq!(result, expected);
     }

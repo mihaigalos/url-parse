@@ -1,4 +1,4 @@
-use crate::url::global::DomainFields;
+use crate::url::global::Domain;
 use crate::url::Parser;
 use crate::utils::Utils;
 use regex::Regex;
@@ -9,17 +9,17 @@ impl Parser {
     /// # Example
     /// ```rust
     /// use url_parse::url::Parser;
-    /// use url_parse::url::global::DomainFields;
+    /// use url_parse::url::global::Domain;
     /// let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
-    /// let expected = DomainFields {
+    /// let expected = Domain {
     ///     subdomain: Some("www"),
     ///     domain: Some("example"),
     ///     top_level_domain: Some("com"),
     /// };
-    /// let result = Parser::new(None).mixout_domain_fields(input);
+    /// let result = Parser::new(None).domain(input);
     /// assert_eq!(result, expected);
     /// ```
-    pub fn mixout_domain_fields<'a>(&self, input: &'a str) -> DomainFields<'a> {
+    pub fn domain<'a>(&self, input: &'a str) -> Domain<'a> {
         let input = Utils::substring_after_login(self, input);
         let input = Utils::substring_before_port(self, input);
         let input = match input.find("/") {
@@ -27,14 +27,14 @@ impl Parser {
             None => input,
         };
         return self
-            .mixout_subdomain_domain_top_level_domain(input)
-            .or_else(|| self.mixout_subdomain_domain(input))
-            .or_else(|| self.mixout_domain_ipv4(input))
-            .unwrap_or_else(|| DomainFields::empty());
+            .subdomain_domain_top_level_domain(input)
+            .or_else(|| self.subdomain_domain(input))
+            .or_else(|| self.domain_ipv4(input))
+            .unwrap_or_else(|| Domain::empty());
     }
 
     /// Mixes out the subdomain.domain part (i.e.: google.com -> subdomain(None), domain(google), top_level_domain(com))
-    fn mixout_subdomain_domain<'a>(&self, input: &'a str) -> Option<DomainFields<'a>> {
+    fn subdomain_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input);
 
@@ -43,7 +43,7 @@ impl Parser {
         }
 
         let caps = caps.unwrap();
-        return Some(DomainFields {
+        return Some(Domain {
             subdomain: None,
             domain: Some(caps.get(1).unwrap().as_str()),
             top_level_domain: Some(caps.get(2).unwrap().as_str()),
@@ -51,10 +51,7 @@ impl Parser {
     }
 
     /// Mixes out the subdomain.domain.top_level_domain part (i.e.: www.google.com -> subdomain(www), domain(google), top_level_domain(com))
-    fn mixout_subdomain_domain_top_level_domain<'a>(
-        &self,
-        input: &'a str,
-    ) -> Option<DomainFields<'a>> {
+    fn subdomain_domain_top_level_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)\.(.*)").unwrap();
         let caps = re.captures(input);
 
@@ -63,20 +60,20 @@ impl Parser {
         }
 
         let caps = caps.unwrap();
-        return Some(DomainFields {
+        return Some(Domain {
             subdomain: Some(caps.get(1).unwrap().as_str()),
             domain: Some(caps.get(2).unwrap().as_str()),
             top_level_domain: Some(caps.get(3).unwrap().as_str()),
         });
     }
 
-    fn mixout_domain_ipv4<'a>(&self, input: &'a str) -> Option<DomainFields<'a>> {
+    fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
         let caps = re.captures(input);
         if caps.is_none() {
             return None;
         }
-        return Some(DomainFields {
+        return Some(Domain {
             subdomain: None,
             domain: Some(caps.unwrap().get(0).unwrap().as_str()),
             top_level_domain: None,
@@ -89,87 +86,87 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_mixout_domain_ipv4_when_typical() {
+    fn test_domain_ipv4_when_typical() {
         let input = "https://1.2.3.4:443/blog/article/search?docid=720&hl=en#dayone";
-        let expected = DomainFields {
+        let expected = Domain {
             subdomain: None,
             domain: Some("1.2.3.4"),
             top_level_domain: None,
         };
-        let result = Parser::new(None).mixout_domain_ipv4(input).unwrap();
+        let result = Parser::new(None).domain_ipv4(input).unwrap();
 
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_fields_fails_when_typical() {
+    fn test_domain_fails_when_typical() {
         let input = "foobar";
-        let expected = DomainFields::empty();
-        let result = Parser::new(None).mixout_domain_fields(input);
+        let expected = Domain::empty();
+        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_fields_works_when_typical() {
+    fn test_domain_works_when_typical() {
         let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
-        let expected = DomainFields {
+        let expected = Domain {
             subdomain: Some("www"),
             domain: Some("example"),
             top_level_domain: Some("com"),
         };
-        let result = Parser::new(None).mixout_domain_fields(input);
+        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_fields_works_when_no_subdomain() {
+    fn test_domain_works_when_no_subdomain() {
         let input = "https://example.com:443/blog/article/search?docid=720&hl=en#dayone";
-        let expected = DomainFields {
+        let expected = Domain {
             subdomain: None,
             domain: Some("example"),
             top_level_domain: Some("com"),
         };
-        let result = Parser::new(None).mixout_domain_fields(input);
+        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_fields_works_when_typical_long_subdomain() {
+    fn test_domain_works_when_typical_long_subdomain() {
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-        let expected = DomainFields {
+        let expected = Domain {
             subdomain: Some("www"),
             domain: Some("example.co"),
             top_level_domain: Some("uk"),
         };
-        let result = Parser::new(None).mixout_domain_fields(input);
+        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_fields_works_when_no_port() {
+    fn test_domain_works_when_no_port() {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let expected = DomainFields {
+        let expected = Domain {
             subdomain: Some("www"),
             domain: Some("example.co"),
             top_level_domain: Some("uk"),
         };
-        let result = Parser::new(None).mixout_domain_fields(input);
+        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_subdomain_domain_fails_when_garbage() {
+    fn test_subdomain_domain_fails_when_garbage() {
         let input = "foobar";
         let expected = None;
-        let result = Parser::new(None).mixout_subdomain_domain(input);
+        let result = Parser::new(None).subdomain_domain(input);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn test_mixout_domain_ipv4_fails_when_garbage() {
+    fn test_domain_ipv4_fails_when_garbage() {
         let input = "foobar";
         let expected = None;
-        let result = Parser::new(None).mixout_subdomain_domain(input);
+        let result = Parser::new(None).subdomain_domain(input);
         assert_eq!(result, expected);
     }
 }
