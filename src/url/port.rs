@@ -29,7 +29,7 @@ impl Parser {
 
             return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
-        let default_port = match self.mixout_scheme(&input.to_string()) {
+        let default_port = match self.scheme(&input.to_string()) {
             Some(v) => {
                 let (port, _) = self.default_port_mappings[&v.as_ref()];
                 Some(port)

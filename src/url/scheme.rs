@@ -7,10 +7,10 @@ impl Parser {
     /// ```rust
     /// use url_parse::url::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-    /// let scheme = Parser::new(None).mixout_scheme(input);
+    /// let scheme = Parser::new(None).scheme(input);
     /// assert_eq!(scheme.unwrap(), "https");
     /// ```
-    pub fn mixout_scheme<'a>(&self, input: &'a str) -> Option<&'a str> {
+    pub fn scheme<'a>(&self, input: &'a str) -> Option<&'a str> {
         let split: Vec<&str> = input.split("://").collect();
 
         match split.len() {
@@ -35,23 +35,23 @@ mod tests {
     }
 
     #[test]
-    fn test_mixout_scheme_works_when_typical() {
+    fn test_scheme_works_when_typical() {
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
-        let scheme = Parser::new(None).mixout_scheme(input);
+        let scheme = Parser::new(None).scheme(input);
         assert_eq!(scheme.unwrap(), "https");
     }
 
     #[test]
-    fn test_mixout_scheme_works_when_no_port() {
+    fn test_scheme_works_when_no_port() {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let scheme = Parser::new(None).mixout_scheme(input);
+        let scheme = Parser::new(None).scheme(input);
         assert_eq!(scheme.unwrap(), "https");
     }
 
     #[test]
-    fn test_mixout_scheme_works_when_no_scheme() {
+    fn test_scheme_works_when_no_scheme() {
         let input = "www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
-        let scheme = Parser::new(None).mixout_scheme(input);
+        let scheme = Parser::new(None).scheme(input);
         assert!(scheme.is_none());
     }
 }
