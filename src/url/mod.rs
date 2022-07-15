@@ -83,7 +83,7 @@ impl Parser {
         let domain_fields = self.domain(url);
         let port = self.mixout_port(url);
         let path = self
-            .mixout_path(url)
+            .path(url)
             .map(|x| x.iter().map(|s| s.to_string()).collect());
         let query = self.mixout_query(url).map(|s| s.to_string());
         let anchor = self.anchor(url).map(|s| s.to_string());
