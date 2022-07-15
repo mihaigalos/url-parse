@@ -80,7 +80,7 @@ impl Parser {
             user_pass.0.map(|s| s.to_string()),
             user_pass.1.map(|s| s.to_string()),
         );
-        let domain_fields = self.mixout_domain_fields(url);
+        let domain_fields = self.domain(url);
         let port = self.mixout_port(url);
         let path = self
             .mixout_path(url)
