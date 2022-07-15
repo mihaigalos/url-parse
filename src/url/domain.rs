@@ -27,14 +27,14 @@ impl Parser {
             None => input,
         };
         return self
-            .mixout_subdomain_domain_top_level_domain(input)
-            .or_else(|| self.mixout_subdomain_domain(input))
+            .subdomain_domain_top_level_domain(input)
+            .or_else(|| self.subdomain_domain(input))
             .or_else(|| self.mixout_domain_ipv4(input))
             .unwrap_or_else(|| Domain::empty());
     }
 
     /// Mixes out the subdomain.domain part (i.e.: google.com -> subdomain(None), domain(google), top_level_domain(com))
-    fn mixout_subdomain_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+    fn subdomain_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input);
 
@@ -51,7 +51,7 @@ impl Parser {
     }
 
     /// Mixes out the subdomain.domain.top_level_domain part (i.e.: www.google.com -> subdomain(www), domain(google), top_level_domain(com))
-    fn mixout_subdomain_domain_top_level_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+    fn subdomain_domain_top_level_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)\.(.*)").unwrap();
         let caps = re.captures(input);
 
@@ -155,10 +155,10 @@ mod tests {
     }
 
     #[test]
-    fn test_mixout_subdomain_domain_fails_when_garbage() {
+    fn test_subdomain_domain_fails_when_garbage() {
         let input = "foobar";
         let expected = None;
-        let result = Parser::new(None).mixout_subdomain_domain(input);
+        let result = Parser::new(None).subdomain_domain(input);
         assert_eq!(result, expected);
     }
 
@@ -166,7 +166,7 @@ mod tests {
     fn test_mixout_domain_ipv4_fails_when_garbage() {
         let input = "foobar";
         let expected = None;
-        let result = Parser::new(None).mixout_subdomain_domain(input);
+        let result = Parser::new(None).subdomain_domain(input);
         assert_eq!(result, expected);
     }
 }
