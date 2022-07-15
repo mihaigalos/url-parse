@@ -85,7 +85,7 @@ impl Parser {
         let path = self
             .path(url)
             .map(|x| x.iter().map(|s| s.to_string()).collect());
-        let query = self.mixout_query(url).map(|s| s.to_string());
+        let query = self.query(url).map(|s| s.to_string());
         let anchor = self.anchor(url).map(|s| s.to_string());
         Ok(Url {
             scheme: scheme,
