@@ -6,25 +6,14 @@ mod path;
 mod port;
 mod query;
 mod scheme;
+mod url;
 
 pub mod global;
 use crate::error::ParseError;
 use crate::url::defaults::*;
+use crate::url::url::Url;
 
 use std::collections::HashMap;
-
-#[derive(Debug)]
-pub struct Url {
-    pub scheme: Option<String>,
-    pub user_pass: (Option<String>, Option<String>),
-    pub subdomain: Option<String>,
-    pub domain: Option<String>,
-    pub top_level_domain: Option<String>,
-    pub port: Option<u32>,
-    pub path: Option<Vec<String>>,
-    pub query: Option<String>,
-    pub anchor: Option<String>,
-}
 
 pub struct Parser {
     default_port_mappings: HashMap<&'static str, (u32, &'static str)>,
