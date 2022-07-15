@@ -1,4 +1,4 @@
-use crate::url::Parser;
+use crate::core::Parser;
 use crate::utils::Utils;
 
 impl Parser {
@@ -6,7 +6,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let result = Parser::new(None).path(input).unwrap();
     /// let expected = vec!["blog", "article", "search"];

@@ -1,4 +1,4 @@
-use crate::url::Parser;
+use crate::core::Parser;
 
 pub struct Utils;
 
@@ -8,7 +8,7 @@ impl Utils {
     /// # Example
     /// ```rust
     /// use url_parse::utils::Utils;
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input =
     ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected =
@@ -31,7 +31,7 @@ impl Utils {
     /// # Example
     /// ```rust
     /// use url_parse::utils::Utils;
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input =
     ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
@@ -52,7 +52,7 @@ impl Utils {
     /// # Example
     /// ```rust
     /// use url_parse::utils::Utils;
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input =
     ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected = "www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
@@ -80,7 +80,7 @@ impl Utils {
     /// # Example
     /// ```rust
     /// use url_parse::utils::Utils;
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected = "https://www.example.co.uk".to_string();
     /// let parser = Parser::new(None);
@@ -103,7 +103,7 @@ impl Utils {
     /// # Example
     /// ```rust
     /// use url_parse::utils::Utils;
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input =
     ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected =

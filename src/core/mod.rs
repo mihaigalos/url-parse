@@ -6,12 +6,11 @@ mod path;
 mod port;
 mod query;
 mod scheme;
-mod url;
 
 pub mod global;
+use crate::core::defaults::default_port_mappings;
 use crate::error::ParseError;
-use crate::url::defaults::*;
-use crate::url::url::Url;
+use crate::url::Url;
 
 use std::collections::HashMap;
 
@@ -25,7 +24,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
@@ -39,7 +38,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// use url_parse::url::Url;
     /// let input = "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let result = Parser::new(None).parse(input).unwrap();

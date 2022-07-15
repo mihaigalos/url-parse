@@ -6,6 +6,7 @@
 //!
 //! `url-parse` provides some missing schemes (`sftp`, `ssh`, `s3`) and enables the user to specify custom schemes before parsing.
 
+pub mod core;
 pub mod error;
 pub mod url;
 pub mod utils;
