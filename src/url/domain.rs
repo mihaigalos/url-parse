@@ -29,7 +29,7 @@ impl Parser {
         return self
             .subdomain_domain_top_level_domain(input)
             .or_else(|| self.subdomain_domain(input))
-            .or_else(|| self.mixout_domain_ipv4(input))
+            .or_else(|| self.domain_ipv4(input))
             .unwrap_or_else(|| Domain::empty());
     }
 
@@ -67,7 +67,7 @@ impl Parser {
         });
     }
 
-    fn mixout_domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+    fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
         let caps = re.captures(input);
         if caps.is_none() {
@@ -86,14 +86,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_mixout_domain_ipv4_when_typical() {
+    fn test_domain_ipv4_when_typical() {
         let input = "https://1.2.3.4:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = Domain {
             subdomain: None,
             domain: Some("1.2.3.4"),
             top_level_domain: None,
         };
-        let result = Parser::new(None).mixout_domain_ipv4(input).unwrap();
+        let result = Parser::new(None).domain_ipv4(input).unwrap();
 
         assert_eq!(result, expected);
     }
@@ -163,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mixout_domain_ipv4_fails_when_garbage() {
+    fn test_domain_ipv4_fails_when_garbage() {
         let input = "foobar";
         let expected = None;
         let result = Parser::new(None).subdomain_domain(input);
