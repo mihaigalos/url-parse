@@ -12,6 +12,18 @@ pub struct Url {
 }
 
 impl Url {
+    /// Extract the representation of the host for this URL.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "example.com";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.host_str().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn host_str(&self) -> Option<String> {
         match &self.top_level_domain {
             Some(v) => Some(self.domain.as_ref().unwrap().to_owned() + "." + v),
@@ -75,6 +87,7 @@ impl Url {
         };
     }
 
+    /// Create a new empty instance with all fields set to none.
     pub fn empty() -> Url {
         Url {
             scheme: None,
