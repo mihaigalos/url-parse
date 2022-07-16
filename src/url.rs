@@ -12,7 +12,7 @@ pub struct Url {
 }
 
 impl Url {
-    pub fn host(&self) -> Option<String> {
+    pub fn host_str(&self) -> Option<String> {
         return match &self.top_level_domain {
             Some(v) => Some(self.domain.as_ref().unwrap().to_owned() + "." + v),
             None => Some(self.domain.as_ref().unwrap().to_owned()),
@@ -76,7 +76,7 @@ mod tests {
         input.domain = Some("def".to_owned());
         input.top_level_domain = Some("xyz".to_owned());
 
-        let result = input.host().unwrap();
+        let result = input.host_str().unwrap();
 
         assert_eq!(result, "def.xyz".to_owned());
     }
@@ -88,7 +88,7 @@ mod tests {
         input.domain = Some("def".to_owned());
         input.top_level_domain = None;
 
-        let result = input.host().unwrap();
+        let result = input.host_str().unwrap();
 
         assert_eq!(result, "def".to_owned());
     }
