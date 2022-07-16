@@ -1,4 +1,4 @@
-use crate::url::Parser;
+use crate::core::Parser;
 use crate::utils::Utils;
 use regex::Regex;
 
@@ -7,7 +7,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input = "https://user:pass@www.example.co.uk";
     /// let expected = (Some("user"), Some("pass"));
     /// let result = Parser::new(None).login(input);
