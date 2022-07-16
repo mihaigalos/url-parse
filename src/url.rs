@@ -61,9 +61,9 @@ impl Url {
     /// ```
     pub fn username(&self) -> Option<String> {
         return match &self.user_pass {
-            (Some(user), Some(_)) => Some(user.to_owned()),
+            (Some(user), Some(_)) | (Some(user), None) => Some(user.to_owned()),
             (None, None) => None,
-            (None, Some(_)) | (Some(_), None) => None,
+            (None, Some(_)) => None,
         };
     }
 
@@ -183,6 +183,25 @@ mod tests {
     }
 
     #[test]
+    fn test_username_works_when_no_password() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), None);
+
+        let result = input.username().unwrap();
+
+        assert_eq!(result, "user".to_owned());
+    }
+
+    #[test]
+    fn test_username_is_none_when_no_credentials() {
+        let input = Url::empty();
+
+        let result = input.username();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
     fn test_password_works_when_typical() {
         let mut input = Url::empty();
         input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
@@ -190,5 +209,25 @@ mod tests {
         let result = input.password().unwrap();
 
         assert_eq!(result, "pass".to_owned());
+    }
+
+    #[test]
+    fn test_password_none_when_no_credentials() {
+        let mut input = Url::empty();
+        input.user_pass = (None, None);
+
+        let result = input.password();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_password_none_when_no_password() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), None);
+
+        let result = input.password();
+
+        assert!(result.is_none());
     }
 }
