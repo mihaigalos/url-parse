@@ -27,9 +27,9 @@ impl Parser {
             None => input,
         };
         return self
-            .subdomain_domain_top_level_domain(input)
+            .domain_ipv4(input)
+            .or_else(|| self.subdomain_domain_top_level_domain(input))
             .or_else(|| self.subdomain_domain(input))
-            .or_else(|| self.domain_ipv4(input))
             .or_else(|| self.domain_alias(input))
             .unwrap_or_else(|| Domain::empty());
     }
@@ -190,5 +190,14 @@ mod tests {
         let domain = Parser::new(None).domain("");
         let result = domain.domain;
         assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_parse_works_when_localhost_ip() {
+        let domain = Parser::new(None)
+            .domain("ftp://127.0.0.1:21/subfolder/test_ftp_put_works_when_subfolder");
+        let expected = "127.0.0.1";
+        let result = domain.domain.unwrap();
+        assert_eq!(result, expected);
     }
 }
