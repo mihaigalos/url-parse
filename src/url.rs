@@ -19,10 +19,34 @@ impl Url {
         }
     }
 
+    /// Extract the username from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = 443;
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.port_or_known_default().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn port_or_known_default(&self) -> Option<u32> {
         self.port
     }
 
+    /// Extract the username from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "user";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.username().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
     pub fn username(&self) -> Option<String> {
         return match &self.user_pass {
             (Some(user), Some(_)) => Some(user.to_owned()),
