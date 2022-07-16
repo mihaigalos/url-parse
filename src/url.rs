@@ -103,6 +103,7 @@ impl Url {
     }
 }
 
+/// Compare two objects of this type.
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
@@ -114,6 +115,14 @@ impl PartialEq for Url {
             && self.path == other.path
             && self.query == other.query
             && self.anchor == other.anchor;
+    }
+}
+
+/// Display the serialization of this URL.
+impl std::fmt::Display for Url {
+    #[inline]
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(fmt, "{:?}", self)
     }
 }
 
@@ -239,5 +248,12 @@ mod tests {
         let result = input.password();
 
         assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_print_url_when_typical() {
+        let input = Url::empty();
+
+        println!("{}", input);
     }
 }
