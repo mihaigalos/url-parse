@@ -31,6 +31,26 @@ impl Url {
         };
     }
 
+    /// Extract the password from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "pass";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.password().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn password(&self) -> Option<String> {
+        return match &self.user_pass {
+            (Some(_), Some(pass)) => Some(pass.to_owned()),
+            (None, None) => None,
+            (None, Some(_)) | (Some(_), None) => None,
+        };
+    }
+
     pub fn empty() -> Url {
         Url {
             scheme: None,
@@ -123,5 +143,15 @@ mod tests {
         let result = input.username().unwrap();
 
         assert_eq!(result, "user".to_owned());
+    }
+
+    #[test]
+    fn test_password_works_when_typical() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
+
+        let result = input.password().unwrap();
+
+        assert_eq!(result, "pass".to_owned());
     }
 }
