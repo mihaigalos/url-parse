@@ -12,13 +12,82 @@ pub struct Url {
 }
 
 impl Url {
-    pub fn host(&self) -> Option<String> {
-        return match &self.top_level_domain {
+    /// Extract the representation of the host for this URL.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "example.com";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.host_str().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn host_str(&self) -> Option<String> {
+        match &self.top_level_domain {
             Some(v) => Some(self.domain.as_ref().unwrap().to_owned() + "." + v),
             None => Some(self.domain.as_ref().unwrap().to_owned()),
+        }
+    }
+
+    /// Extract the username from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = 443;
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.port_or_known_default().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn port_or_known_default(&self) -> Option<u32> {
+        self.port
+    }
+
+    /// Extract the username from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "user";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.username().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn username(&self) -> Option<String> {
+        return match &self.user_pass {
+            (Some(user), Some(_)) | (Some(user), None) => Some(user.to_owned()),
+            (None, None) => None,
+            (None, Some(_)) => None,
         };
     }
 
+    /// Extract the password from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://user:pass@www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let expected = "pass";
+    /// let parsed = Parser::new(None).parse(input).unwrap();
+    /// let result = parsed.password().unwrap();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn password(&self) -> Option<String> {
+        return match &self.user_pass {
+            (Some(_), Some(pass)) => Some(pass.to_owned()),
+            (None, None) => None,
+            (None, Some(_)) | (Some(_), None) => None,
+        };
+    }
+
+    /// Create a new empty instance with all fields set to none.
     pub fn empty() -> Url {
         Url {
             scheme: None,
@@ -76,7 +145,7 @@ mod tests {
         input.domain = Some("def".to_owned());
         input.top_level_domain = Some("xyz".to_owned());
 
-        let result = input.host().unwrap();
+        let result = input.host_str().unwrap();
 
         assert_eq!(result, "def.xyz".to_owned());
     }
@@ -88,8 +157,87 @@ mod tests {
         input.domain = Some("def".to_owned());
         input.top_level_domain = None;
 
-        let result = input.host().unwrap();
+        let result = input.host_str().unwrap();
 
         assert_eq!(result, "def".to_owned());
+    }
+
+    #[test]
+    fn test_port_or_known_default_when_typical() {
+        let mut input = Url::empty();
+        input.port = Some(1234);
+
+        let result = input.port_or_known_default().unwrap();
+
+        assert_eq!(result, 1234);
+    }
+
+    #[test]
+    fn test_username_works_when_typical() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
+
+        let result = input.username().unwrap();
+
+        assert_eq!(result, "user".to_owned());
+    }
+
+    #[test]
+    fn test_username_works_when_no_password() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), None);
+
+        let result = input.username().unwrap();
+
+        assert_eq!(result, "user".to_owned());
+    }
+
+    #[test]
+    fn test_username_is_none_when_no_credentials() {
+        let input = Url::empty();
+
+        let result = input.username();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_username_is_none_when_no_username_but_impossible_password() {
+        let mut input = Url::empty();
+        input.user_pass = (None, Some("pass".to_string()));
+
+        let result = input.username();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_password_works_when_typical() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
+
+        let result = input.password().unwrap();
+
+        assert_eq!(result, "pass".to_owned());
+    }
+
+    #[test]
+    fn test_password_none_when_no_credentials() {
+        let mut input = Url::empty();
+        input.user_pass = (None, None);
+
+        let result = input.password();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_password_none_when_no_password() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), None);
+
+        let result = input.password();
+
+        assert!(result.is_none());
     }
 }
