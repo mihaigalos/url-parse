@@ -13,14 +13,22 @@ pub struct Url {
 
 impl Url {
     pub fn host_str(&self) -> Option<String> {
-        return match &self.top_level_domain {
+        match &self.top_level_domain {
             Some(v) => Some(self.domain.as_ref().unwrap().to_owned() + "." + v),
             None => Some(self.domain.as_ref().unwrap().to_owned()),
-        };
+        }
     }
 
     pub fn port_or_known_default(&self) -> Option<u32> {
         self.port
+    }
+
+    pub fn username(&self) -> Option<String> {
+        return match &self.user_pass {
+            (Some(user), Some(_)) => Some(user.to_owned()),
+            (None, None) => None,
+            (None, Some(_)) | (Some(_), None) => None,
+        };
     }
 
     pub fn empty() -> Url {
@@ -105,5 +113,15 @@ mod tests {
         let result = input.port_or_known_default().unwrap();
 
         assert_eq!(result, 1234);
+    }
+
+    #[test]
+    fn test_username_works_when_typical() {
+        let mut input = Url::empty();
+        input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
+
+        let result = input.username().unwrap();
+
+        assert_eq!(result, "user".to_owned());
     }
 }
