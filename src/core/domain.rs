@@ -67,6 +67,7 @@ impl Parser {
         });
     }
 
+    /// Mixes out the ip v4 into a Domain structure.
     fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
         let caps = re.captures(input);
@@ -168,5 +169,12 @@ mod tests {
         let expected = None;
         let result = Parser::new(None).subdomain_domain(input);
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_parse_works_when_localhost() {
+        let domain = Parser::new(None).domain("ssh://user@localhost:2223/file");
+        let result = domain.domain.unwrap();
+        assert_eq!(result, "localhost");
     }
 }
