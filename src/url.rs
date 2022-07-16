@@ -87,6 +87,21 @@ impl Url {
         };
     }
 
+    /// Extract the password from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let result = Parser::new(None).path(input).unwrap();
+    /// let expected = vec!["blog", "article", "search"];
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn path_segments(&self) -> Option<Vec<String>> {
+        self.path.clone()
+    }
+
     /// Create a new empty instance with all fields set to none.
     pub fn empty() -> Url {
         Url {
@@ -103,6 +118,7 @@ impl Url {
     }
 }
 
+/// Compare two objects of this type.
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
         return self.scheme == other.scheme
@@ -114,6 +130,14 @@ impl PartialEq for Url {
             && self.path == other.path
             && self.query == other.query
             && self.anchor == other.anchor;
+    }
+}
+
+/// Display the serialization of this URL.
+impl std::fmt::Display for Url {
+    #[inline]
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(fmt, "{:?}", self)
     }
 }
 
@@ -239,5 +263,27 @@ mod tests {
         let result = input.password();
 
         assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_print_url_when_typical() {
+        let input = Url::empty();
+
+        println!("{}", input);
+    }
+
+    #[test]
+    fn test_path_works_when_partial_url() {
+        let mut input = Url::empty();
+        let expected = vec![
+            "blog".to_string(),
+            "article".to_string(),
+            "search".to_string(),
+        ];
+        input.path = Some(expected.clone());
+
+        let result = input.path_segments().unwrap();
+
+        assert_eq!(result, expected);
     }
 }
