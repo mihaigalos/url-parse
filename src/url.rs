@@ -19,6 +19,10 @@ impl Url {
         };
     }
 
+    pub fn port_or_known_default(&self) -> Option<u32> {
+        self.port
+    }
+
     pub fn empty() -> Url {
         Url {
             scheme: None,
@@ -91,5 +95,15 @@ mod tests {
         let result = input.host_str().unwrap();
 
         assert_eq!(result, "def".to_owned());
+    }
+
+    #[test]
+    fn test_port_or_known_default_when_typical() {
+        let mut input = Url::empty();
+        input.port = Some(1234);
+
+        let result = input.port_or_known_default().unwrap();
+
+        assert_eq!(result, 1234);
     }
 }
