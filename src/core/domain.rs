@@ -1,5 +1,5 @@
-use crate::url::global::Domain;
-use crate::url::Parser;
+use crate::core::global::Domain;
+use crate::core::Parser;
 use crate::utils::Utils;
 use regex::Regex;
 
@@ -8,8 +8,8 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::url::Parser;
-    /// use url_parse::url::global::Domain;
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
     /// let input = "https://www.example.com:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected = Domain {
     ///     subdomain: Some("www"),

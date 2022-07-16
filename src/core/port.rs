@@ -1,6 +1,6 @@
 use regex::Regex;
 
-use crate::url::Parser;
+use crate::core::Parser;
 use crate::utils::Utils;
 
 impl Parser {
@@ -9,7 +9,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let port = Parser::new(None).port(input);
     /// assert_eq!(port.unwrap(), 443);

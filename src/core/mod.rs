@@ -8,23 +8,11 @@ mod query;
 mod scheme;
 
 pub mod global;
+use crate::core::defaults::default_port_mappings;
 use crate::error::ParseError;
-use crate::url::defaults::*;
+use crate::url::Url;
 
 use std::collections::HashMap;
-
-#[derive(Debug)]
-pub struct Url {
-    pub scheme: Option<String>,
-    pub user_pass: (Option<String>, Option<String>),
-    pub subdomain: Option<String>,
-    pub domain: Option<String>,
-    pub top_level_domain: Option<String>,
-    pub port: Option<u32>,
-    pub path: Option<Vec<String>>,
-    pub query: Option<String>,
-    pub anchor: Option<String>,
-}
 
 pub struct Parser {
     default_port_mappings: HashMap<&'static str, (u32, &'static str)>,
@@ -36,7 +24,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
@@ -50,7 +38,7 @@ impl Parser {
     ///
     /// # Example
     /// ```rust,no_run
-    /// use url_parse::url::Parser;
+    /// use url_parse::core::Parser;
     /// use url_parse::url::Url;
     /// let input = "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let result = Parser::new(None).parse(input).unwrap();
@@ -98,20 +86,6 @@ impl Parser {
             query: query,
             anchor: anchor,
         })
-    }
-}
-
-impl PartialEq for Url {
-    fn eq(&self, other: &Self) -> bool {
-        return self.scheme == other.scheme
-            && self.user_pass == other.user_pass
-            && self.subdomain == other.subdomain
-            && self.domain == other.domain
-            && self.top_level_domain == other.top_level_domain
-            && self.port == other.port
-            && self.path == other.path
-            && self.query == other.query
-            && self.anchor == other.anchor;
     }
 }
 
