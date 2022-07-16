@@ -30,6 +30,7 @@ impl Parser {
             .subdomain_domain_top_level_domain(input)
             .or_else(|| self.subdomain_domain(input))
             .or_else(|| self.domain_ipv4(input))
+            .or_else(|| self.domain_alias(input))
             .unwrap_or_else(|| Domain::empty());
     }
 
@@ -80,6 +81,20 @@ impl Parser {
             top_level_domain: None,
         });
     }
+
+    /// Mixes out single-word alias (i.e.: "localhost") into a Domain structure.
+    fn domain_alias<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+        let re = Regex::new(r".+").unwrap();
+        let caps = re.captures(input);
+        if caps.is_none() {
+            return None;
+        }
+        return Some(Domain {
+            subdomain: None,
+            domain: Some(caps.unwrap().get(0).unwrap().as_str()),
+            top_level_domain: None,
+        });
+    }
 }
 
 #[cfg(test)]
@@ -96,14 +111,6 @@ mod tests {
         };
         let result = Parser::new(None).domain_ipv4(input).unwrap();
 
-        assert_eq!(result, expected);
-    }
-
-    #[test]
-    fn test_domain_fails_when_typical() {
-        let input = "foobar";
-        let expected = Domain::empty();
-        let result = Parser::new(None).domain(input);
         assert_eq!(result, expected);
     }
 
@@ -176,5 +183,12 @@ mod tests {
         let domain = Parser::new(None).domain("ssh://user@localhost:2223/file");
         let result = domain.domain.unwrap();
         assert_eq!(result, "localhost");
+    }
+
+    #[test]
+    fn test_parse_works_when_empty() {
+        let domain = Parser::new(None).domain("");
+        let result = domain.domain;
+        assert!(result.is_none());
     }
 }
