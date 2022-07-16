@@ -87,6 +87,21 @@ impl Url {
         };
     }
 
+    /// Extract the password from the url.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    /// let result = Parser::new(None).path(input).unwrap();
+    /// let expected = vec!["blog", "article", "search"];
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn path_segments(&self) -> Option<Vec<String>> {
+        self.path.clone()
+    }
+
     /// Create a new empty instance with all fields set to none.
     pub fn empty() -> Url {
         Url {
@@ -255,5 +270,18 @@ mod tests {
         let input = Url::empty();
 
         println!("{}", input);
+    }
+
+    #[test]
+    fn test_path_works_when_partial_url() {
+        let mut input = Url::empty();
+        let expected = vec![
+            "blog".to_string(),
+            "article".to_string(),
+            "search".to_string(),
+        ];
+        input.path = Some(expected.clone());
+        let result = input.path_segments().unwrap();
+        assert_eq!(result, expected);
     }
 }
