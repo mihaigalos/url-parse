@@ -89,20 +89,6 @@ impl Parser {
     }
 }
 
-impl PartialEq for Url {
-    fn eq(&self, other: &Self) -> bool {
-        return self.scheme == other.scheme
-            && self.user_pass == other.user_pass
-            && self.subdomain == other.subdomain
-            && self.domain == other.domain
-            && self.top_level_domain == other.top_level_domain
-            && self.port == other.port
-            && self.path == other.path
-            && self.query == other.query
-            && self.anchor == other.anchor;
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
