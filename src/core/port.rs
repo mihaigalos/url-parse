@@ -18,8 +18,8 @@ impl Parser {
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(":");
         if position_colon.is_some() {
-            let _before = &input[..position_colon.unwrap()];
-            let after = &input[position_colon.unwrap() + 1..];
+            let _before = &rest[..position_colon.unwrap()];
+            let after = &rest[position_colon.unwrap() + 1..];
             let re = Regex::new(r"(\d+).*").unwrap();
             let caps = re.captures(after);
             if caps.is_none() {
@@ -29,6 +29,7 @@ impl Parser {
 
             return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
+
         let default_port = match self.scheme(&input.to_string()) {
             Some(v) => {
                 let (port, _) = self.default_port_mappings[&v.as_ref()];
@@ -36,7 +37,6 @@ impl Parser {
             }
             None => None,
         };
-
         default_port
     }
 }
@@ -53,6 +53,13 @@ mod tests {
     }
 
     #[test]
+    fn test_port_works_when_scheme_and_port_specified() {
+        let input = "ftp://127.0.0.1:21/test";
+        let port = Parser::new(None).port(input);
+        assert_eq!(port.unwrap(), 21);
+    }
+
+    #[test]
     fn test_port_works_when_no_path() {
         let input = "https://www.example.co.uk:443";
         let port = Parser::new(None).port(input);
@@ -62,7 +69,6 @@ mod tests {
     fn test_port_default_works_when_https() {
         let input = "https://www.example.co.uk";
         let port = Parser::new(None).port(input);
-        assert!(port.is_some());
         assert_eq!(port.unwrap(), 443);
     }
 
