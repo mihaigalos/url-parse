@@ -202,6 +202,16 @@ mod tests {
     }
 
     #[test]
+    fn test_username_is_none_when_no_username_but_impossible_password() {
+        let mut input = Url::empty();
+        input.user_pass = (None, Some("pass".to_string()));
+
+        let result = input.username();
+
+        assert!(result.is_none());
+    }
+
+    #[test]
     fn test_password_works_when_typical() {
         let mut input = Url::empty();
         input.user_pass = (Some("user".to_string()), Some("pass".to_string()));
