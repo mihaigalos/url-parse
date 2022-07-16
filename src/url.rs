@@ -281,7 +281,9 @@ mod tests {
             "search".to_string(),
         ];
         input.path = Some(expected.clone());
+
         let result = input.path_segments().unwrap();
+
         assert_eq!(result, expected);
     }
 }
