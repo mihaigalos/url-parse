@@ -103,8 +103,8 @@ impl Url {
     }
 
     /// Create a new empty instance with all fields set to none.
-    pub fn empty() -> Url {
-        Url {
+    pub fn empty() -> Self {
+        Self {
             scheme: None,
             user_pass: (None, None),
             subdomain: None,
