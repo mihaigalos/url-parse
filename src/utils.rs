@@ -70,7 +70,11 @@ impl Utils {
                 None => (0, 0),
             };
 
-            return input.get(pos_port + len_port_string..).unwrap();
+            let substring_after_port = input.get(pos_port + len_port_string..);
+            return match substring_after_port {
+                Some(v) => v,
+                None => "",
+            };
         }
         return input;
     }
@@ -196,6 +200,15 @@ mod tests {
     fn test_substring_after_port_works_when_colon_in_url() {
         let input = "http://en.wikipedia.org/wiki/Template:Welcome";
         let expected = "en.wikipedia.org/wiki/Template:Welcome".to_string();
+        let parser = Parser::new(None);
+        let result = Utils::substring_after_port(&parser, input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_substring_after_port_works_when_nothing_after_port() {
+        let input = "http://192.168.0.100:8080";
+        let expected = "".to_string();
         let parser = Parser::new(None);
         let result = Utils::substring_after_port(&parser, input);
         assert_eq!(result, expected);
