@@ -8,4 +8,4 @@ repository = "https://github.com/mihaigalos/url-parse"
 categories = ["parser-implementations", "web-programming", "encoding"]
 
 [dependencies]
-regex = "1.5.6"
+regex = "1.6.0"
