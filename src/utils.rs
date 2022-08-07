@@ -138,8 +138,7 @@ impl Utils {
         let mut result = parser
             .scheme(input)
             .and_then(|s| Some(s.to_string() + "://"))
-            .or_else(|| Some("".to_string()))
-            .unwrap();
+            .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
         let key_with_max_value = similarity.iter().max_by_key(|entry| entry.1).unwrap().0;
@@ -335,6 +334,29 @@ mod tests {
         let subpath =
             "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
         let expected = "https://github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_canonicalize_works_when_no_scheme() {
+        let input = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_canonicalize_works_when_empty() {
+        let input = "";
+        let subpath = "";
+        let expected = "/";
 
         let parser = Parser::new(None);
         let result = Utils::canonicalize(&parser, input, subpath);
