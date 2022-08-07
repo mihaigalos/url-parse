@@ -340,4 +340,16 @@ mod tests {
         let result = Utils::canonicalize(&parser, input, subpath);
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn test_canonicalize_works_when_no_scheme() {
+        let input = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
 }
