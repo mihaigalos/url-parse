@@ -17,9 +17,9 @@ impl Parser {
     pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(':');
-        if position_colon.is_some() {
-            let _before = &rest[..position_colon.unwrap()];
-            let after = &rest[position_colon.unwrap() + 1..];
+        if let Some(v) = position_colon {
+            let _before = &rest[..v];
+            let after = &rest[v + 1..];
             let re = Regex::new(r"(\d+).*").unwrap();
             let caps = re.captures(after);
             caps.as_ref()?;
