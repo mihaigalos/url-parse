@@ -14,7 +14,7 @@ impl Parser {
     /// let port = Parser::new(None).port(input);
     /// assert_eq!(port.unwrap(), 443);
     /// ```
-    pub fn port<'a>(&self, input: &'a str) -> Option<u32> {
+    pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(':');
         if position_colon.is_some() {
