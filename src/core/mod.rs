@@ -28,8 +28,9 @@ impl Parser {
     /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
+        let defaults = default_port_mappings();
         Parser {
-            default_port_mappings: port_mappings.unwrap_or(default_port_mappings()),
+            default_port_mappings: port_mappings.unwrap_or(defaults),
         }
     }
 
