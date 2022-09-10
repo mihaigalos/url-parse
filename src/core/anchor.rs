@@ -12,8 +12,8 @@ impl Parser {
     /// ```
     pub fn anchor<'a>(&self, input: &'a str) -> Option<&'a str> {
         let position_anchor = input.find('#');
-        if position_anchor.is_some() {
-            let after = &input[position_anchor.unwrap() + 1..];
+        if let Some(v) = position_anchor {
+            let after = &input[v + 1..];
             return Some(after);
         }
         None
