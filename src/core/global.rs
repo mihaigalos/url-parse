@@ -8,7 +8,7 @@ pub struct Domain<'a> {
 impl<'a> PartialEq for Domain<'a> {
     /// Enables comparison between two domain objects.
     fn eq(&self, other: &Self) -> bool {
-        return self.subdomain == other.subdomain && self.domain == other.domain;
+        self.subdomain == other.subdomain && self.domain == other.domain
     }
 }
 

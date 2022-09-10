@@ -20,7 +20,7 @@ impl Utils {
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let scheme = parser.scheme(input);
         let double_slash_length = 2;
-        match scheme.clone() {
+        match scheme {
             Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
             None => input,
         }
@@ -40,8 +40,8 @@ impl Utils {
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_after_login<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let input = Utils::substring_after_scheme(&parser, input);
-        match input.find("@") {
+        let input = Utils::substring_after_scheme(parser, input);
+        match input.find('@') {
             Some(pos) => &input[pos + 1..],
             None => input,
         }
@@ -61,10 +61,10 @@ impl Utils {
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_after_port<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let input = Utils::substring_after_scheme(&parser, input);
+        let input = Utils::substring_after_scheme(parser, input);
         let port = parser.port(input);
 
-        if input.find(":").is_some() {
+        if input.find(':').is_some() {
             let (pos_port, len_port_string) = match port {
                 Some(v) => (input.find(&v.to_string()).unwrap(), v.to_string().len() + 1),
                 None => (0, 0),
@@ -76,7 +76,7 @@ impl Utils {
                 None => "",
             };
         }
-        return input;
+        input
     }
 
     /// Get substring immediately before port.
@@ -117,8 +117,8 @@ impl Utils {
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> &'a str {
-        let input = Utils::substring_after_scheme(&parser, input);
-        match input.find("/") {
+        let input = Utils::substring_after_scheme(parser, input);
+        match input.find('/') {
             Some(pos) => &input[pos..],
             None => input,
         }
@@ -136,8 +136,7 @@ impl Utils {
     /// assert_eq!(result, expected);
     pub fn canonicalize<'a>(parser: &Parser, input: &'a str, subpath: &'a str) -> String {
         let mut result = parser
-            .scheme(input)
-            .and_then(|s| Some(s.to_string() + "://"))
+            .scheme(input).map(|s| s.to_string() + "://")
             .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
@@ -154,9 +153,9 @@ impl Utils {
         input: &'a str,
         subpath: &'a str,
     ) -> (HashMap<usize, usize>, Vec<&'a str>) {
-        let input = Utils::substring_after_scheme(&parser, input);
-        let input_splits = input.split("/").collect::<Vec<&str>>();
-        let subpath_splits = subpath.split("/").collect::<Vec<&str>>();
+        let input = Utils::substring_after_scheme(parser, input);
+        let input_splits = input.split('/').collect::<Vec<&str>>();
+        let subpath_splits = subpath.split('/').collect::<Vec<&str>>();
 
         let mut similarity: HashMap<usize, usize> = HashMap::new();
         let mut pos_subpath = 0;

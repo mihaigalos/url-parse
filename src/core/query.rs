@@ -11,7 +11,7 @@ impl Parser {
     /// assert_eq!(result, "docid=720&hl=en#dayone");
     /// ```
     pub fn query<'a>(&self, input: &'a str) -> Option<&'a str> {
-        let position_questionmark = input.find("?");
+        let position_questionmark = input.find('?');
         if position_questionmark.is_some() {
             let after = &input[position_questionmark.unwrap() + 1..];
             return Some(after);

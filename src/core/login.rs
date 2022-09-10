@@ -15,7 +15,7 @@ impl Parser {
     /// ```
     pub fn login<'a>(&self, input: &'a str) -> (Option<&'a str>, Option<&'a str>) {
         let input = Utils::substring_after_scheme(self, input);
-        let input = match input.find("/") {
+        let input = match input.find('/') {
             Some(pos) => &input[..pos],
             None => input,
         };
@@ -28,7 +28,7 @@ impl Parser {
 
         let caps = caps.unwrap();
         let user_with_pass = caps.get(1).unwrap().as_str();
-        let (user, pass) = match user_with_pass.find(":") {
+        let (user, pass) = match user_with_pass.find(':') {
             Some(v) => (Some(&user_with_pass[..v]), Some(&user_with_pass[v + 1..])),
             None => (Some(user_with_pass), None),
         };

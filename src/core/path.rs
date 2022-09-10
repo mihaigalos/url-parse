@@ -15,16 +15,16 @@ impl Parser {
     pub fn path<'a>(&self, input: &'a str) -> Option<Vec<&'a str>> {
         let input = Utils::substring_from_path_begin(self, input);
         let input = Utils::substring_after_port(self, input);
-        let input = match input.chars().nth(0) {
+        let input = match input.chars().next() {
             Some('/') => &input[1..],
-            _ => &input,
+            _ => input,
         };
-        let position_questionmark = input.find("?");
+        let position_questionmark = input.find('?');
         let path_string = match position_questionmark {
             Some(v) => &input[..v],
             None => input,
         };
-        return Some(path_string.split("/").collect());
+        return Some(path_string.split('/').collect());
     }
 }
 
