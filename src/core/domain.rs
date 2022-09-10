@@ -22,7 +22,7 @@ impl Parser {
     pub fn domain<'a>(&self, input: &'a str) -> Domain<'a> {
         let input = Utils::substring_after_login(self, input);
         let input = Utils::substring_before_port(self, input);
-        let input = match input.find("/") {
+        let input = match input.find('/') {
             Some(pos) => &input[..pos],
             None => input,
         };
@@ -31,7 +31,7 @@ impl Parser {
             .or_else(|| self.subdomain_domain_top_level_domain(input))
             .or_else(|| self.subdomain_domain(input))
             .or_else(|| self.domain_alias(input))
-            .unwrap_or_else(|| Domain::empty());
+            .unwrap_or_else(Domain::empty);
     }
 
     /// Mixes out the subdomain.domain part (i.e.: google.com -> subdomain(None), domain(google), top_level_domain(com))
@@ -39,9 +39,7 @@ impl Parser {
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input);
 
-        if caps.is_none() {
-            return None;
-        }
+        caps.as_ref()?;
 
         let caps = caps.unwrap();
         return Some(Domain {
@@ -56,9 +54,7 @@ impl Parser {
         let re = Regex::new(r"(.*?)\.(.*)\.(.*)").unwrap();
         let caps = re.captures(input);
 
-        if caps.is_none() {
-            return None;
-        }
+        caps.as_ref()?;
 
         let caps = caps.unwrap();
         return Some(Domain {
@@ -72,9 +68,7 @@ impl Parser {
     fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
         let caps = re.captures(input);
-        if caps.is_none() {
-            return None;
-        }
+        caps.as_ref()?;
         return Some(Domain {
             subdomain: None,
             domain: Some(caps.unwrap().get(0).unwrap().as_str()),
@@ -86,9 +80,7 @@ impl Parser {
     fn domain_alias<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r".+").unwrap();
         let caps = re.captures(input);
-        if caps.is_none() {
-            return None;
-        }
+        caps.as_ref()?;
         return Some(Domain {
             subdomain: None,
             domain: Some(caps.unwrap().get(0).unwrap().as_str()),

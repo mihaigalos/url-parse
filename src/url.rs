@@ -60,11 +60,11 @@ impl Url {
     /// assert_eq!(result, expected);
     /// ```
     pub fn username(&self) -> Option<String> {
-        return match &self.user_pass {
+        match &self.user_pass {
             (Some(user), Some(_)) | (Some(user), None) => Some(user.to_owned()),
             (None, None) => None,
             (None, Some(_)) => None,
-        };
+        }
     }
 
     /// Extract the password from the url.
@@ -80,11 +80,11 @@ impl Url {
     /// assert_eq!(result, expected);
     /// ```
     pub fn password(&self) -> Option<String> {
-        return match &self.user_pass {
+        match &self.user_pass {
             (Some(_), Some(pass)) => Some(pass.to_owned()),
             (None, None) => None,
             (None, Some(_)) | (Some(_), None) => None,
-        };
+        }
     }
 
     /// Extract the password from the url.
@@ -121,7 +121,7 @@ impl Url {
 /// Compare two objects of this type.
 impl PartialEq for Url {
     fn eq(&self, other: &Self) -> bool {
-        return self.scheme == other.scheme
+        self.scheme == other.scheme
             && self.user_pass == other.user_pass
             && self.subdomain == other.subdomain
             && self.domain == other.domain
@@ -129,7 +129,7 @@ impl PartialEq for Url {
             && self.port == other.port
             && self.path == other.path
             && self.query == other.query
-            && self.anchor == other.anchor;
+            && self.anchor == other.anchor
     }
 }
 

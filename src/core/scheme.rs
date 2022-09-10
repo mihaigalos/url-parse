@@ -17,7 +17,7 @@ impl Parser {
             return Some(split[0]);
         };
 
-        let split: Vec<&str> = input.split(":").collect();
+        let split: Vec<&str> = input.split(':').collect();
         for (protocol, _) in self.default_port_mappings.iter() {
             if &split[0] == protocol {
                 return Some(protocol);

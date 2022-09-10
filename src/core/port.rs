@@ -14,25 +14,23 @@ impl Parser {
     /// let port = Parser::new(None).port(input);
     /// assert_eq!(port.unwrap(), 443);
     /// ```
-    pub fn port<'a>(&self, input: &'a str) -> Option<u32> {
+    pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
-        let position_colon = rest.find(":");
-        if position_colon.is_some() {
-            let _before = &rest[..position_colon.unwrap()];
-            let after = &rest[position_colon.unwrap() + 1..];
+        let position_colon = rest.find(':');
+        if let Some(v) = position_colon {
+            let _before = &rest[..v];
+            let after = &rest[v + 1..];
             let re = Regex::new(r"(\d+).*").unwrap();
             let caps = re.captures(after);
-            if caps.is_none() {
-                return None;
-            }
+            caps.as_ref()?;
             let caps = caps.unwrap();
 
             return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
 
-        let default_port = match self.scheme(&input.to_string()) {
+        let default_port = match self.scheme(input) {
             Some(v) => {
-                let (port, _) = self.default_port_mappings[&v.as_ref()];
+                let (port, _) = self.default_port_mappings[&v];
                 Some(port)
             }
             None => None,

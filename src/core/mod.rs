@@ -28,8 +28,9 @@ impl Parser {
     /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
+        let defaults = default_port_mappings();
         Parser {
-            default_port_mappings: port_mappings.unwrap_or(default_port_mappings()),
+            default_port_mappings: port_mappings.unwrap_or(defaults),
         }
     }
 
@@ -76,15 +77,15 @@ impl Parser {
         let query = self.query(url).map(|s| s.to_string());
         let anchor = self.anchor(url).map(|s| s.to_string());
         Ok(Url {
-            scheme: scheme,
-            user_pass: user_pass,
+            scheme,
+            user_pass,
             subdomain: domain_fields.subdomain.map(|s| s.to_string()),
             domain: domain_fields.domain.map(|s| s.to_string()),
             top_level_domain: domain_fields.top_level_domain.map(|s| s.to_string()),
-            port: port,
-            path: path,
-            query: query,
-            anchor: anchor,
+            port,
+            path,
+            query,
+            anchor,
         })
     }
 }
