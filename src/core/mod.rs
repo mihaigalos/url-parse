@@ -139,7 +139,7 @@ mod tests {
                     "article".to_string(),
                     "search".to_string(),
                 ]),
-                query: Some("docid=720&hl=en#dayone".to_string()),
+                query: Some("docid=720&hl=en".to_string()),
                 anchor: Some("dayone".to_string()),
             }
         );
@@ -164,7 +164,7 @@ mod tests {
                     "article".to_string(),
                     "search".to_string(),
                 ]),
-                query: Some("docid=720&hl=en#dayone".to_string()),
+                query: Some("docid=720&hl=en".to_string()),
                 anchor: Some("dayone".to_string()),
             }
         );

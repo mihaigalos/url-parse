@@ -87,7 +87,7 @@ impl Url {
         }
     }
 
-    /// Extract the password from the url.
+    /// Extract the path segments from the path.
     ///
     /// # Example
     /// ```rust
@@ -102,6 +102,82 @@ impl Url {
         self.path.clone()
     }
 
+    /// Serialize an URL struct to a String.
+    ///
+    /// # Example
+    /// ```rust
+    /// use url_parse::core::Parser;
+    /// use url_parse::core::global::Domain;
+    /// use url_parse::url::Url;
+    ///
+    ///let input = Url {
+    ///    scheme: Some("https".to_string()),
+    ///    user_pass: (Some("user".to_string()), Some("pass".to_string())),
+    ///    subdomain: Some("www".to_string()),
+    ///    domain: Some("example.co".to_string()),
+    ///    top_level_domain: Some("uk".to_string()),
+    ///    port: Some(443),
+    ///    path: Some(vec![
+    ///        "blog".to_string(),
+    ///        "article".to_string(),
+    ///        "search".to_string(),
+    ///    ]),
+    ///    query: Some("docid=720&hl=en".to_string()),
+    ///    anchor: Some("dayone".to_string()),
+    ///};
+    ///let expected =
+    ///    "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+    ///
+    ///let result = input.serialize();
+    /// assert_eq!(result, expected);
+    /// ```
+    pub fn serialize(&self) -> String {
+        let mut result: String = "".to_string();
+        if self.scheme.is_some() {
+            result += &self.scheme.as_ref().unwrap();
+            result += "://";
+        }
+        let (user, pass) = &self.user_pass;
+        if user.is_some() {
+            result += user.as_ref().unwrap();
+        }
+        if pass.is_some() {
+            result += ":";
+            result += pass.as_ref().unwrap();
+            result += "@";
+        }
+        if self.subdomain.is_some() {
+            result += &self.subdomain.as_ref().unwrap();
+            result += ".";
+        }
+        if self.domain.is_some() {
+            result += &self.domain.as_ref().unwrap();
+            result += ".";
+        }
+        if self.top_level_domain.is_some() {
+            result += &self.top_level_domain.as_ref().unwrap();
+        }
+        if self.port.is_some() {
+            result += ":";
+            result += &self.port.unwrap().to_string();
+        }
+
+        if self.path.is_some() {
+            for (_, segment) in self.path_segments().unwrap().iter().enumerate() {
+                result += "/";
+                result += segment;
+            }
+        }
+        if self.query.is_some() {
+            result += "?";
+            result += self.query.as_ref().unwrap();
+        }
+        if self.anchor.is_some() {
+            result += "#";
+            result += self.anchor.as_ref().unwrap();
+        }
+        result
+    }
     /// Create a new empty instance with all fields set to none.
     pub fn empty() -> Self {
         Self {
@@ -264,11 +340,9 @@ mod tests {
 
         assert!(result.is_none());
     }
-
     #[test]
     fn test_print_url_when_typical() {
         let input = Url::empty();
-
         println!("{}", input);
     }
 
@@ -283,6 +357,30 @@ mod tests {
         input.path = Some(expected.clone());
 
         let result = input.path_segments().unwrap();
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_serialize_to_string() {
+        let input = Url {
+            scheme: Some("https".to_string()),
+            user_pass: (Some("user".to_string()), Some("pass".to_string())),
+            subdomain: Some("www".to_string()),
+            domain: Some("example.co".to_string()),
+            top_level_domain: Some("uk".to_string()),
+            port: Some(443),
+            path: Some(vec![
+                "blog".to_string(),
+                "article".to_string(),
+                "search".to_string(),
+            ]),
+            query: Some("docid=720&hl=en".to_string()),
+            anchor: Some("dayone".to_string()),
+        };
+        let expected =
+            "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+
+        let result = input.serialize();
 
         assert_eq!(result, expected);
     }
