@@ -134,7 +134,7 @@ impl Url {
     pub fn serialize(&self) -> String {
         let mut result: String = "".to_string();
         if self.scheme.is_some() {
-            result += &self.scheme.as_ref().unwrap();
+            result += self.scheme.as_ref().unwrap();
             result += "://";
         }
         let (user, pass) = &self.user_pass;
@@ -147,15 +147,15 @@ impl Url {
             result += "@";
         }
         if self.subdomain.is_some() {
-            result += &self.subdomain.as_ref().unwrap();
+            result += self.subdomain.as_ref().unwrap();
             result += ".";
         }
         if self.domain.is_some() {
-            result += &self.domain.as_ref().unwrap();
+            result += self.domain.as_ref().unwrap();
             result += ".";
         }
         if self.top_level_domain.is_some() {
-            result += &self.top_level_domain.as_ref().unwrap();
+            result += self.top_level_domain.as_ref().unwrap();
         }
         if self.port.is_some() {
             result += ":";
