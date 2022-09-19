@@ -1,6 +1,6 @@
 [package]
 name = "url-parse"
-version = "0.5.12"
+version = "0.5.13"
 description = "🔗 A Rust library for parsing URLs."
 
 categories = ["parser-implementations", "web-programming", "encoding"]

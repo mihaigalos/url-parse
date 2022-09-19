@@ -14,4 +14,4 @@ on:
 
 jobs:
   cd:
-    uses: mihaigalos/config/.github/workflows/rust-cd.yaml@main
+    uses: mihaigalos/config/.github/workflows/rust-cd-crates-io-only.yaml@main
