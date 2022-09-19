@@ -1,6 +1,7 @@
 # url-parse
 
 [![CI](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml)
+[![CD](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml/badge.svg)](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml)
 [![codecov](https://codecov.io/gh/mihaigalos/url-parse/branch/main/graph/badge.svg?token=crukaI8Gmf)](https://codecov.io/gh/mihaigalos/url-parse)
 [![crates.io](https://img.shields.io/crates/d/url-parse.svg)](https://crates.io/crates/url-parse)
 [![Documentation](https://docs.rs/url-parse/badge.svg)](https://docs.rs/url-parse)
