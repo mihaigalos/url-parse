@@ -18,12 +18,11 @@ impl Parser {
         };
 
         let split: Vec<&str> = input.split(':').collect();
-        for (protocol, _) in self.default_port_mappings.iter() {
-            if &split[0] == protocol {
-                return Some(protocol);
-            }
-        }
-        None
+        self.default_port_mappings
+            .iter()
+            .map(|(protocol, _)| protocol)
+            .find(|&protocol| &split[0] == protocol)
+            .copied()
     }
 }
 
