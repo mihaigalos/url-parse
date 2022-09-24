@@ -15,3 +15,6 @@ on:
 jobs:
   cd:
     uses: mihaigalos/config/.github/workflows/rust-cd-crates-io-only.yaml@main
+    secrets:
+      CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }} # See https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/reusing-workflows#passing-inputs-and-secrets-to-a-reusable-workflow
+
