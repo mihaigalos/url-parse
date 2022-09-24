@@ -15,3 +15,6 @@ on:
 jobs:
   cd:
     uses: mihaigalos/config/.github/workflows/rust-cd-crates-io-only.yaml@main
+    with:
+      CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
