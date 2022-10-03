@@ -62,6 +62,7 @@ assert_eq!(
     Url {
         scheme: Some("myschema".to_string()),
         user_pass: (Some("user".to_string()), Some("pass".to_string())),
+        subdomain: Some("www".to_string()),
         domain: Some("example.co".to_string()),
         top_level_domain: Some("uk".to_string()),
         port: Some(8888),
