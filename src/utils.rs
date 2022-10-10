@@ -1,3 +1,4 @@
+use crate::core::scheme_separator::SchemaSeparator;
 use crate::core::Parser;
 use std::collections::HashMap;
 pub struct Utils;
@@ -19,9 +20,10 @@ impl Utils {
     /// ```
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let scheme = parser.scheme(input);
-        let double_slash_length = 2;
         match scheme {
-            Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
+            Some((v, separator)) => input
+                .get(v.len() + <SchemaSeparator as Into<usize>>::into(separator)..)
+                .unwrap(),
             None => input,
         }
     }
@@ -136,7 +138,8 @@ impl Utils {
     /// assert_eq!(result, expected);
     pub fn canonicalize<'a>(parser: &Parser, input: &'a str, subpath: &'a str) -> String {
         let mut result = parser
-            .scheme(input).map(|s| s.to_string() + "://")
+            .scheme(input)
+            .map(|s| s.0.to_string() + &<SchemaSeparator as Into<String>>::into(s.1))
             .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
@@ -183,6 +186,17 @@ mod tests {
     fn test_substring_after_scheme_works_when_typical() {
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+        let expected = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone"
+            .to_string();
+        let parser = Parser::new(None);
+        let result = Utils::substring_after_scheme(&parser, input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_substring_after_scheme_works_when_simple_schema() {
+        let input =
+            "https:user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone"
             .to_string();
         let parser = Parser::new(None);
@@ -333,6 +347,18 @@ mod tests {
         let subpath =
             "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
         let expected = "https://github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_canonicalize_works_when_scheme_with_colon() {
+        let input = "https:github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "https:github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
 
         let parser = Parser::new(None);
         let result = Utils::canonicalize(&parser, input, subpath);
