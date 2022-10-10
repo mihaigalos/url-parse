@@ -5,6 +5,7 @@ mod login;
 mod path;
 mod port;
 mod query;
+pub mod schema_separator;
 mod scheme;
 
 pub mod global;
@@ -63,7 +64,7 @@ impl Parser {
     /// )
     /// ```
     pub fn parse(&self, url: &str) -> Result<Url, ParseError> {
-        let scheme = self.scheme(url).map(|s| s.to_string());
+        let scheme = self.scheme(url).map(|s| s.0.to_string());
         let user_pass = self.login(url);
         let user_pass = (
             user_pass.0.map(|s| s.to_string()),

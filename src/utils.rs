@@ -1,3 +1,4 @@
+use crate::core::schema_separator::SchemaSeparator;
 use crate::core::Parser;
 use std::collections::HashMap;
 pub struct Utils;
@@ -19,9 +20,10 @@ impl Utils {
     /// ```
     pub fn substring_after_scheme<'a>(parser: &Parser, input: &'a str) -> &'a str {
         let scheme = parser.scheme(input);
-        let double_slash_length = 2;
         match scheme {
-            Some(v) => input.get(v.len() + double_slash_length + 1..).unwrap(),
+            Some((v, separator)) => input
+                .get(v.len() + <SchemaSeparator as Into<usize>>::into(separator)..)
+                .unwrap(),
             None => input,
         }
     }
@@ -136,7 +138,8 @@ impl Utils {
     /// assert_eq!(result, expected);
     pub fn canonicalize<'a>(parser: &Parser, input: &'a str, subpath: &'a str) -> String {
         let mut result = parser
-            .scheme(input).map(|s| s.to_string() + "://")
+            .scheme(input)
+            .map(|s| s.0.to_string() + "://")
             .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
@@ -183,6 +186,17 @@ mod tests {
     fn test_substring_after_scheme_works_when_typical() {
         let input =
             "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
+        let expected = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone"
+            .to_string();
+        let parser = Parser::new(None);
+        let result = Utils::substring_after_scheme(&parser, input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_substring_after_scheme_works_when_simple_schema() {
+        let input =
+            "https:user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone"
             .to_string();
         let parser = Parser::new(None);
