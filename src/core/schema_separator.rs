@@ -28,10 +28,21 @@ mod tests {
 
         assert_eq!(actual, expected);
     }
+
     #[test]
     fn test_schema_separator_works_when_colon_slash_slash_typical() {
         let expected = 3;
         let input = SchemaSeparator::ColonSlashSlash;
+
+        let actual: usize = input.into();
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_schema_separator_works_when_unknown() {
+        let expected = 0;
+        let input = SchemaSeparator::Unknown;
 
         let actual: usize = input.into();
 
