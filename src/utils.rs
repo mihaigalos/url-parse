@@ -139,7 +139,7 @@ impl Utils {
     pub fn canonicalize<'a>(parser: &Parser, input: &'a str, subpath: &'a str) -> String {
         let mut result = parser
             .scheme(input)
-            .map(|s| s.0.to_string() + "://")
+            .map(|s| s.0.to_string() + &<SchemaSeparator as Into<String>>::into(s.1))
             .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
@@ -347,6 +347,18 @@ mod tests {
         let subpath =
             "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
         let expected = "https://github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_canonicalize_works_when_scheme_with_colon() {
+        let input = "https:github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "https:github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
 
         let parser = Parser::new(None);
         let result = Utils::canonicalize(&parser, input, subpath);
