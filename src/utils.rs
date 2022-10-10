@@ -1,4 +1,4 @@
-use crate::core::schema_separator::SchemaSeparator;
+use crate::core::scheme_separator::SchemaSeparator;
 use crate::core::Parser;
 use std::collections::HashMap;
 pub struct Utils;

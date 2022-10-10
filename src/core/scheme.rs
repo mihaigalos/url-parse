@@ -1,4 +1,4 @@
-use crate::core::schema_separator::SchemaSeparator;
+use crate::core::scheme_separator::SchemaSeparator;
 use crate::core::Parser;
 impl Parser {
     /// Extract the query from the url.
@@ -6,7 +6,7 @@ impl Parser {
     /// # Example
     /// ```rust
     /// use url_parse::core::Parser;
-    /// use url_parse::core::schema_separator::SchemaSeparator;
+    /// use url_parse::core::scheme_separator::SchemaSeparator;
     /// let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let scheme = Parser::new(None).scheme(input);
     /// assert_eq!(scheme.unwrap(), ("https",  SchemaSeparator::ColonSlashSlash));
@@ -16,7 +16,7 @@ impl Parser {
     /// # Example
     /// ```rust
     /// use url_parse::core::Parser;
-    /// use url_parse::core::schema_separator::SchemaSeparator;
+    /// use url_parse::core::scheme_separator::SchemaSeparator;
     /// let input = "https:www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let scheme = Parser::new(None).scheme(input);
     /// assert_eq!(scheme.unwrap(), ("https",  SchemaSeparator::Colon));

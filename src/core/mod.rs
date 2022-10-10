@@ -5,8 +5,8 @@ mod login;
 mod path;
 mod port;
 mod query;
-pub mod schema_separator;
 mod scheme;
+pub mod scheme_separator;
 
 pub mod global;
 use crate::core::defaults::default_port_mappings;

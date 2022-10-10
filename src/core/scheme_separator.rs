@@ -27,7 +27,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_schema_separator_to_usize_works_when_colon_typical() {
+    fn test_scheme_separator_to_usize_works_when_colon_typical() {
         let expected = 1;
         let input = SchemaSeparator::Colon;
 
@@ -37,7 +37,7 @@ mod tests {
     }
 
     #[test]
-    fn test_schema_separator_to_usize_works_when_colon_slash_slash_typical() {
+    fn test_scheme_separator_to_usize_works_when_colon_slash_slash_typical() {
         let expected = 3;
         let input = SchemaSeparator::ColonSlashSlash;
 
@@ -47,7 +47,7 @@ mod tests {
     }
 
     #[test]
-    fn test_schema_separator_to_string_works_when_colon_typical() {
+    fn test_scheme_separator_to_string_works_when_colon_typical() {
         let expected = ":".to_string();
         let input = SchemaSeparator::Colon;
 
@@ -57,7 +57,7 @@ mod tests {
     }
 
     #[test]
-    fn test_schema_separator_to_string_works_when_colon_slash_slash_typical() {
+    fn test_scheme_separator_to_string_works_when_colon_slash_slash_typical() {
         let expected = "://".to_string();
         let input = SchemaSeparator::ColonSlashSlash;
 
