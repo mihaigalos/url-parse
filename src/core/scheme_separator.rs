@@ -1,23 +1,23 @@
 #[derive(Debug, PartialEq, Eq)]
-pub enum SchemaSeparator {
+pub enum SchemeSeparator {
     Colon,
     ColonSlashSlash,
 }
 
-impl From<SchemaSeparator> for usize {
-    fn from(v: SchemaSeparator) -> usize {
+impl From<SchemeSeparator> for usize {
+    fn from(v: SchemeSeparator) -> usize {
         match v {
-            SchemaSeparator::Colon => 1,
-            SchemaSeparator::ColonSlashSlash => 3,
+            SchemeSeparator::Colon => 1,
+            SchemeSeparator::ColonSlashSlash => 3,
         }
     }
 }
 
-impl From<SchemaSeparator> for String {
-    fn from(v: SchemaSeparator) -> String {
+impl From<SchemeSeparator> for String {
+    fn from(v: SchemeSeparator) -> String {
         match v {
-            SchemaSeparator::Colon => ":".to_string(),
-            SchemaSeparator::ColonSlashSlash => "://".to_string(),
+            SchemeSeparator::Colon => ":".to_string(),
+            SchemeSeparator::ColonSlashSlash => "://".to_string(),
         }
     }
 }
@@ -29,7 +29,7 @@ mod tests {
     #[test]
     fn test_scheme_separator_to_usize_works_when_colon_typical() {
         let expected = 1;
-        let input = SchemaSeparator::Colon;
+        let input = SchemeSeparator::Colon;
 
         let actual: usize = input.into();
 
@@ -39,7 +39,7 @@ mod tests {
     #[test]
     fn test_scheme_separator_to_usize_works_when_colon_slash_slash_typical() {
         let expected = 3;
-        let input = SchemaSeparator::ColonSlashSlash;
+        let input = SchemeSeparator::ColonSlashSlash;
 
         let actual: usize = input.into();
 
@@ -49,7 +49,7 @@ mod tests {
     #[test]
     fn test_scheme_separator_to_string_works_when_colon_typical() {
         let expected = ":".to_string();
-        let input = SchemaSeparator::Colon;
+        let input = SchemeSeparator::Colon;
 
         let actual: String = input.into();
 
@@ -59,7 +59,7 @@ mod tests {
     #[test]
     fn test_scheme_separator_to_string_works_when_colon_slash_slash_typical() {
         let expected = "://".to_string();
-        let input = SchemaSeparator::ColonSlashSlash;
+        let input = SchemeSeparator::ColonSlashSlash;
 
         let actual: String = input.into();
 

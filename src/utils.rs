@@ -1,4 +1,4 @@
-use crate::core::scheme_separator::SchemaSeparator;
+use crate::core::scheme_separator::SchemeSeparator;
 use crate::core::Parser;
 use std::collections::HashMap;
 pub struct Utils;
@@ -22,7 +22,7 @@ impl Utils {
         let scheme = parser.scheme(input);
         match scheme {
             Some((v, separator)) => input
-                .get(v.len() + <SchemaSeparator as Into<usize>>::into(separator)..)
+                .get(v.len() + <SchemeSeparator as Into<usize>>::into(separator)..)
                 .unwrap(),
             None => input,
         }
@@ -139,7 +139,7 @@ impl Utils {
     pub fn canonicalize<'a>(parser: &Parser, input: &'a str, subpath: &'a str) -> String {
         let mut result = parser
             .scheme(input)
-            .map(|s| s.0.to_string() + &<SchemaSeparator as Into<String>>::into(s.1))
+            .map(|s| s.0.to_string() + &<SchemeSeparator as Into<String>>::into(s.1))
             .unwrap_or_else(|| "".to_string());
 
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
