@@ -30,7 +30,7 @@ impl Parser {
 
         let default_port = match self.scheme(input) {
             Some((v, _)) => {
-                let (port, _) = self.default_port_mappings[&v];
+                let (port, _) = self.port_mappings[&v];
                 Some(port)
             }
             None => None,

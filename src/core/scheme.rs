@@ -30,7 +30,7 @@ impl Parser {
 
         let split: Vec<&str> = input.split(':').collect();
         let scheme = self
-            .default_port_mappings
+            .port_mappings
             .iter()
             .map(|(protocol, _)| protocol)
             .find(|&protocol| &split[0] == protocol)?;

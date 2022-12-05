@@ -16,7 +16,7 @@ use crate::url::Url;
 use std::collections::HashMap;
 
 pub struct Parser {
-    default_port_mappings: HashMap<&'static str, (u32, &'static str)>,
+    port_mappings: HashMap<&'static str, (u32, &'static str)>,
 }
 
 impl Parser {
@@ -29,9 +29,8 @@ impl Parser {
     /// let parser = Parser::new(None);
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
-        let defaults = default_port_mappings();
         Parser {
-            default_port_mappings: port_mappings.unwrap_or(defaults),
+            port_mappings: port_mappings.unwrap_or(default_port_mappings()),
         }
     }
 
