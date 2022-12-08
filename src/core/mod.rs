@@ -30,7 +30,7 @@ impl Parser {
     /// ```
     pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
         Parser {
-            port_mappings: port_mappings.unwrap_or(default_port_mappings()),
+            port_mappings: port_mappings.unwrap_or_else(default_port_mappings),
         }
     }
 
