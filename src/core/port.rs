@@ -23,6 +23,8 @@ impl Parser {
     #[cfg(feature = "std")]
     pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
+        let path = Utils::substring_from_path_begin(self, input);
+        let rest = rest.replace(path, "");
         let position_colon = rest.find(':');
         if let Some(v) = position_colon {
             let _before = &rest[..v];
@@ -48,6 +50,8 @@ impl Parser {
     #[cfg(all(feature = "alloc", not(feature = "std")))]
     pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
+        let path = Utils::substring_from_path_begin(self, input);
+        let rest = rest.replace(path, "");
         let position_colon = rest.find(':');
         if let Some(v) = position_colon {
             let _before = &rest[..v];
