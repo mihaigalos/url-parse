@@ -1,7 +1,14 @@
 use crate::core::global::Domain;
 use crate::core::Parser;
 use crate::utils::Utils;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use safe_regex::{regex, Matcher1, Matcher2, Matcher3, Matcher4};
+#[cfg(feature = "std")]
 use regex::Regex;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use core::str::from_utf8;
 
 impl Parser {
     /// Extract the domain fields from the url.
@@ -35,6 +42,7 @@ impl Parser {
     }
 
     /// Mixes out the subdomain.domain part (i.e.: google.com -> subdomain(None), domain(google), top_level_domain(com))
+    #[cfg(feature = "std")]
     fn subdomain_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)").unwrap();
         let caps = re.captures(input);
@@ -49,7 +57,20 @@ impl Parser {
         });
     }
 
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
+    fn subdomain_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+        let matcher: Matcher2<_> = regex!(br"(.*?)\.(.*)");
+        let caps = matcher.match_slices(input.as_bytes())?;
+
+        return Some(Domain {
+            subdomain: None,
+            domain: Some(from_utf8(caps.0).unwrap()),
+            top_level_domain: Some(from_utf8(caps.1).unwrap()),
+        });
+    }
+
     /// Mixes out the subdomain.domain.top_level_domain part (i.e.: www.google.com -> subdomain(www), domain(google), top_level_domain(com))
+    #[cfg(feature = "std")]
     fn subdomain_domain_top_level_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"(.*?)\.(.*)\.(.*)").unwrap();
         let caps = re.captures(input);
@@ -64,11 +85,53 @@ impl Parser {
         });
     }
 
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
+    fn subdomain_domain_top_level_domain<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+        let matcher: Matcher3<_> = regex!(br"(.*?)\.(.*)\.(.*)");
+        let caps = matcher.match_slices(input.as_bytes())?;
+
+        return Some(Domain {
+            subdomain: Some(from_utf8(caps.0).unwrap()),
+            domain: Some(from_utf8(caps.1).unwrap()),
+            top_level_domain: Some(from_utf8(caps.2).unwrap()),
+        });
+    }
+
     /// Mixes out the ip v4 into a Domain structure.
+    #[cfg(feature = "std")]
     fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
         let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
         let caps = re.captures(input);
+
         caps.as_ref()?;
+
+        return Some(Domain {
+            subdomain: None,
+            domain: Some(caps.unwrap().get(0).unwrap().as_str()),
+            top_level_domain: None,
+        });
+    }
+    
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
+    fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+        let matcher: Matcher4<_> = regex!(br"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)");
+        let caps = matcher.match_slices(input.as_bytes())?;
+
+        return Some(Domain {
+            subdomain: None,
+            domain: Some(from_utf8(caps.0).unwrap()),
+            top_level_domain: None,
+        });
+    }
+
+    /// Mixes out single-word alias (i.e.: "localhost") into a Domain structure.
+    #[cfg(feature = "std")]
+    fn domain_alias<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
+        let re = Regex::new(r".+").unwrap();
+        let caps = re.captures(input);
+
+        caps.as_ref()?;
+
         return Some(Domain {
             subdomain: None,
             domain: Some(caps.unwrap().get(0).unwrap().as_str()),
@@ -76,14 +139,14 @@ impl Parser {
         });
     }
 
-    /// Mixes out single-word alias (i.e.: "localhost") into a Domain structure.
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
     fn domain_alias<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
-        let re = Regex::new(r".+").unwrap();
-        let caps = re.captures(input);
-        caps.as_ref()?;
+        let matcher: Matcher1<_> = regex!(br"(.+)");
+        let caps = matcher.match_slices(input.as_bytes())?;
+
         return Some(Domain {
             subdomain: None,
-            domain: Some(caps.unwrap().get(0).unwrap().as_str()),
+            domain: Some(from_utf8(caps.0).unwrap()),
             top_level_domain: None,
         });
     }

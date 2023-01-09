@@ -9,14 +9,19 @@ mod scheme;
 pub mod scheme_separator;
 
 pub mod global;
-use crate::core::defaults::default_port_mappings;
 use crate::error::ParseError;
 use crate::url::Url;
 
-use std::collections::HashMap;
+use crate::HashMap;
+
+use alloc::string::ToString;
+
+pub use defaults::default_port_mappings;
+
+pub type PortMap = HashMap<&'static str, (u32, &'static str)>;
 
 pub struct Parser {
-    port_mappings: HashMap<&'static str, (u32, &'static str)>,
+    port_mappings: PortMap,
 }
 
 impl Parser {
@@ -28,7 +33,7 @@ impl Parser {
     /// use url_parse::core::Parser;
     /// let parser = Parser::new(None);
     /// ```
-    pub fn new(port_mappings: Option<HashMap<&'static str, (u32, &'static str)>>) -> Self {
+    pub fn new(port_mappings: Option<PortMap>) -> Self {
         Parser {
             port_mappings: port_mappings.unwrap_or_else(default_port_mappings),
         }
@@ -221,7 +226,7 @@ mod tests {
     #[test]
     fn test_parse_works_when_custom_port_mappings_full_login() {
         let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
-        let mut myport_mappings = HashMap::new();
+        let mut myport_mappings = PortMap::new();
         myport_mappings.insert("myschema", (8888, "My custom schema"));
         let result = Parser::new(Some(myport_mappings)).parse(input).unwrap();
         assert_eq!(

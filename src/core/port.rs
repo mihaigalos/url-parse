@@ -1,4 +1,10 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use safe_regex::{regex, Matcher1};
+#[cfg(feature = "std")]
 use regex::Regex;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use core::str::from_utf8;
 
 use crate::core::Parser;
 use crate::utils::Utils;
@@ -14,6 +20,7 @@ impl Parser {
     /// let port = Parser::new(None).port(input);
     /// assert_eq!(port.unwrap(), 443);
     /// ```
+    #[cfg(feature = "std")]
     pub fn port(&self, input: &str) -> Option<u32> {
         let rest = Utils::substring_after_login(self, input);
         let position_colon = rest.find(':');
@@ -26,6 +33,29 @@ impl Parser {
             let caps = caps.unwrap();
 
             return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
+        }
+
+        let default_port = match self.scheme(input) {
+            Some((v, _)) => {
+                let (port, _) = self.port_mappings[&v];
+                Some(port)
+            }
+            None => None,
+        };
+        default_port
+    }
+
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
+    pub fn port(&self, input: &str) -> Option<u32> {
+        let rest = Utils::substring_after_login(self, input);
+        let position_colon = rest.find(':');
+        if let Some(v) = position_colon {
+            let _before = &rest[..v];
+            let after = &rest[v + 1..];
+            let matcher: Matcher1<_> = regex!(br"(d+).*");
+            let port_bytes = matcher.match_slices(after.as_bytes())?.0;
+
+            return Some(from_utf8(port_bytes).unwrap().trim().parse::<u32>().unwrap());
         }
 
         let default_port = match self.scheme(input) {

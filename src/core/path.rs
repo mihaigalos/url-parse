@@ -1,6 +1,8 @@
 use crate::core::Parser;
 use crate::utils::Utils;
 
+use alloc::vec::Vec;
+
 impl Parser {
     /// Extract the path as a vector from the url.
     ///

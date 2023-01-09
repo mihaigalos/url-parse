@@ -1,5 +1,8 @@
 use crate::core::scheme_separator::SchemeSeparator;
 use crate::core::Parser;
+
+use alloc::vec::Vec;
+
 impl Parser {
     /// Extract the query from the url.
     ///
@@ -30,9 +33,7 @@ impl Parser {
 
         let split: Vec<&str> = input.split(':').collect();
         let scheme = self
-            .port_mappings
-            .iter()
-            .map(|(protocol, _)| protocol)
+            .port_mappings.keys()
             .find(|&protocol| &split[0] == protocol)?;
         Some((scheme, SchemeSeparator::Colon))
     }

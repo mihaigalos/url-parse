@@ -1,3 +1,7 @@
+use alloc::string::{String, ToString};
+use alloc::borrow::ToOwned;
+use alloc::vec::Vec;
+
 #[derive(Debug)]
 pub struct Url {
     pub scheme: Option<String>,
@@ -210,9 +214,9 @@ impl PartialEq for Url {
 }
 
 /// Display the serialization of this URL.
-impl std::fmt::Display for Url {
+impl alloc::fmt::Display for Url {
     #[inline]
-    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+    fn fmt(&self, fmt: &mut alloc::fmt::Formatter) -> Result<(), alloc::fmt::Error> {
         write!(fmt, "{:?}", self)
     }
 }

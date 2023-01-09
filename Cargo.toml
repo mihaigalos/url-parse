@@ -1,13 +1,21 @@
 [package]
 name = "url-parse"
 version = "1.0.1"
-description = "🔗 A Rust library for parsing URLs."
+description = "🔗 A Rust library for parsing URLs. (no_std fork)"
 
 categories = ["parser-implementations", "web-programming", "encoding"]
 edition = "2021"
 keywords = ["parser", "url"]
 license = "MIT"
-repository = "https://github.com/mihaigalos/url-parse"
+repository = "https://github.com/notsatvrn/url-parse"
 
 [dependencies]
-regex = "1.7.0"
+hashbrown = { version = "0.13.1", optional = true }
+regex = { version = "1.7.0", optional = true }
+safe-regex = { version = "0.2.5", optional = true }
+
+[features]
+default = ["std"]
+
+std = ["dep:regex"]
+alloc = ["dep:hashbrown", "dep:safe-regex"]

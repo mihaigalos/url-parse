@@ -31,16 +31,15 @@ No current other crate with support for i.e. special schemes. The reasoning (i.e
  )
  ```
 
- Passing a Some(HashMap) to Parser::new() can be used to create custom schemes.
+ Passing a Some(PortMap) to Parser::new() can be used to create custom schemes.
 
  The hashmap is a key,value pair representing the scheme name (key) to a port and description mapping (value).
  # Example
  ```rust,no_run
- use std::collections::HashMap;
- use url_parse::core::Parser;
+ use url_parse::core::{Parser, PortMap};
  use url_parse::url::Url;
  let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
- let mut myport_mappings = HashMap::new();
+ let mut myport_mappings = PortMap::new();
  myport_mappings.insert("myschema", (8888, "My custom schema"));
  let result = Parser::new(Some(myport_mappings)).parse(input).unwrap();
  assert_eq!(
@@ -63,6 +62,19 @@ No current other crate with support for i.e. special schemes. The reasoning (i.e
  )
  ```
 */
+
+#![no_std]
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+extern crate alloc;
+#[cfg(feature = "std")]
+extern crate std as alloc;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+pub(crate) type HashMap<K, V> = hashbrown::HashMap<K, V>;
+#[cfg(feature = "std")]
+pub(crate) type HashMap<K, V> = alloc::collections::HashMap<K, V>;
+
 pub mod core;
 pub mod error;
 pub mod url;

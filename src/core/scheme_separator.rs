@@ -1,3 +1,5 @@
+use alloc::string::{String, ToString};
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum SchemeSeparator {
     Colon,

@@ -1,6 +1,10 @@
 use crate::core::scheme_separator::SchemeSeparator;
 use crate::core::Parser;
-use std::collections::HashMap;
+use crate::HashMap;
+
+use alloc::string::{String, ToString};
+use alloc::vec::Vec;
+
 pub struct Utils;
 
 impl Utils {

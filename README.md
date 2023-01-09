@@ -1,4 +1,4 @@
-# url-parse
+# url-parse (`no_std` fork)
 
 [![CI](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml/badge.svg)](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml)
 [![CD](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml/badge.svg)](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml)
@@ -48,13 +48,13 @@ assert_eq!(
 
 ### Custom schemes
 
-Passing a `Some(HashMap)` to `Parser::new()` can be used to create custom schemes.
+Passing a `Some(PortMap)` to `Parser::new()` can be used to create custom schemes.
 
 The hashmap is a key,value pair representing the scheme name (key) to a port and description mapping (value).
 
 ```rust
 let input = "myschema://user:pass@example.co.uk/path/to/file.txt";
-let mut myport_mappings = HashMap::new();
+let mut myport_mappings = PortMap::new();
 myport_mappings.insert("myschema", (8888, "My custom schema"));
 let result = Parser::new(Some(myport_mappings)).parse(input).unwrap();
 assert_eq!(

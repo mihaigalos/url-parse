@@ -1,6 +1,13 @@
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use safe_regex::{regex, Matcher2};
+#[cfg(feature = "std")]
+use regex::Regex;
+
+#[cfg(all(feature = "alloc", not(feature = "std")))]
+use core::str::from_utf8;
+
 use crate::core::Parser;
 use crate::utils::Utils;
-use regex::Regex;
 
 impl Parser {
     /// Extract the domain fields from the url.
@@ -13,6 +20,7 @@ impl Parser {
     /// let result = Parser::new(None).login(input);
     /// assert_eq!(result, expected);
     /// ```
+    #[cfg(feature = "std")]
     pub fn login<'a>(&self, input: &'a str) -> (Option<&'a str>, Option<&'a str>) {
         let input = Utils::substring_after_scheme(self, input);
         let input = match input.find('/') {
@@ -28,6 +36,30 @@ impl Parser {
 
         let caps = caps.unwrap();
         let user_with_pass = caps.get(1).unwrap().as_str();
+        let (user, pass) = match user_with_pass.find(':') {
+            Some(v) => (Some(&user_with_pass[..v]), Some(&user_with_pass[v + 1..])),
+            None => (Some(user_with_pass), None),
+        };
+        (user, pass)
+    }
+
+    #[cfg(all(feature = "alloc", not(feature = "std")))]
+    pub fn login<'a>(&self, input: &'a str) -> (Option<&'a str>, Option<&'a str>) {
+        let input = Utils::substring_after_scheme(self, input);
+        let input = match input.find('/') {
+            Some(pos) => &input[..pos],
+            None => input,
+        };
+
+        let matcher: Matcher2<_> = regex!(br"(.*)@(.*).*");
+        let caps = matcher.match_slices(input.as_bytes());
+        if caps.is_none() {
+            return (None, None);
+        }
+
+        let caps = caps.unwrap();
+        let user_with_pass = from_utf8(caps.0).unwrap();
+
         let (user, pass) = match user_with_pass.find(':') {
             Some(v) => (Some(&user_with_pass[..v]), Some(&user_with_pass[v + 1..])),
             None => (Some(user_with_pass), None),
