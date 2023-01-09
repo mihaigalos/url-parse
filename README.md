@@ -1,4 +1,4 @@
-# url-parse (`no_std` fork)
+# url-parse
 
 [![CI](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml/badge.svg)](https://github.com/mihaigalos/url-parse/actions/workflows/ci.yaml)
 [![CD](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml/badge.svg)](https://github.com/mihaigalos/url-parse/actions/workflows/cd.yaml)

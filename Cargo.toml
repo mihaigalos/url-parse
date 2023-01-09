@@ -1,13 +1,13 @@
 [package]
 name = "url-parse"
 version = "1.0.1"
-description = "🔗 A Rust library for parsing URLs. (no_std fork)"
+description = "🔗 A Rust library for parsing URLs."
 
 categories = ["parser-implementations", "web-programming", "encoding"]
 edition = "2021"
 keywords = ["parser", "url"]
 license = "MIT"
-repository = "https://github.com/notsatvrn/url-parse"
+repository = "https://github.com/mihaigalos/url-parse"
 
 [dependencies]
 hashbrown = { version = "0.13.1", optional = true }
