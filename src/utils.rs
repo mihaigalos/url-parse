@@ -146,7 +146,10 @@ impl Utils {
         let key_with_max_value = similarity.iter().max_by_key(|entry| entry.1).unwrap().0;
 
         result += &input_splits[0..*key_with_max_value].join("/");
-        result = result + "/" + subpath;
+        if *key_with_max_value != 0 || input.len() == 0 {
+            result += "/";
+        }
+        result += subpath;
 
         result
     }
@@ -334,6 +337,18 @@ mod tests {
         let input = "https://github.com/mihaigalos/aim/releases/tag/1.5.4";
         let subpath =
             "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "https://github.com/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_canonicalize_works_when_domain_with_path_and_no_scheme() {
+        let input = "https://github.com/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "github.com/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
         let expected = "https://github.com/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
 
         let parser = Parser::new(None);
