@@ -31,8 +31,7 @@ impl Parser {
         let split: Vec<&str> = input.split(':').collect();
         let scheme = self
             .port_mappings
-            .iter()
-            .map(|(protocol, _)| protocol)
+            .keys()
             .find(|&protocol| &split[0] == protocol)?;
         Some((scheme, SchemeSeparator::Colon))
     }

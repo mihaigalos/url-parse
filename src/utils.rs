@@ -146,7 +146,7 @@ impl Utils {
         let key_with_max_value = similarity.iter().max_by_key(|entry| entry.1).unwrap().0;
 
         result += &input_splits[0..*key_with_max_value].join("/");
-        if *key_with_max_value != 0 || input.len() == 0 {
+        if *key_with_max_value != 0 || input.is_empty() {
             result += "/";
         }
         result += subpath;
