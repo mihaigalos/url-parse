@@ -142,6 +142,7 @@ impl Utils {
             .map(|s| s.0.to_string() + &<SchemeSeparator as Into<String>>::into(s.1))
             .unwrap_or_else(|| "".to_string());
 
+        let subpath = Self::trim_leading_slash(subpath);
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);
         let key_with_max_value = similarity.iter().max_by_key(|entry| entry.1).unwrap().0;
 
@@ -178,6 +179,13 @@ impl Utils {
             }
         }
         (similarity, input_splits)
+    }
+
+    fn trim_leading_slash(subpath: &str) -> &str {
+        if subpath.starts_with('/') {
+            return &subpath[1..subpath.len()];
+        }
+        subpath
     }
 }
 
@@ -393,6 +401,18 @@ mod tests {
     }
 
     #[test]
+    fn test_canonicalize_works_when_no_scheme_and_path_begins_with_slash() {
+        let input = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/tag/1.5.4";
+        let subpath =
+            "/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected = "github.com/mihaigalos/aim/fake/path/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let parser = Parser::new(None);
+        let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn test_canonicalize_works_when_empty() {
         let input = "";
         let subpath = "";
@@ -400,6 +420,28 @@ mod tests {
 
         let parser = Parser::new(None);
         let result = Utils::canonicalize(&parser, input, subpath);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_trim_leading_slash_works_when_typical() {
+        let input =
+            "/mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let result = Utils::trim_leading_slash(input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_trim_leading_slash_works_when_no_leading_slash() {
+        let input =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+        let expected =
+            "mihaigalos/aim/releases/download/1.5.4/aim-1.5.4-x86_64-unknown-linux-gnu.tar.gz";
+
+        let result = Utils::trim_leading_slash(input);
         assert_eq!(result, expected);
     }
 }
