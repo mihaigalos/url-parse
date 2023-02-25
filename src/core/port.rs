@@ -20,12 +20,12 @@ impl Parser {
         if let Some(v) = position_colon {
             let _before = &rest[..v];
             let after = &rest[v + 1..];
-            let re = Regex::new(r"(\d+).*").unwrap();
+            let re = Regex::new("^[0-9]+").unwrap();
             let caps = re.captures(after);
             caps.as_ref()?;
             let caps = caps.unwrap();
 
-            return Some(caps.get(1).unwrap().as_str().trim().parse::<u32>().unwrap());
+            return Some(caps.get(0).unwrap().as_str().trim().parse::<u32>().unwrap());
         }
 
         let default_port = match self.scheme(input) {
