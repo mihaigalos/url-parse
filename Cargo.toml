@@ -10,4 +10,4 @@ license = "MIT"
 repository = "https://github.com/mihaigalos/url-parse"
 
 [dependencies]
-regex = { version = "1.7.1", default-features = false, features = ["std"] }
+regex = { version = "1.7.2", default-features = false, features = ["std"] }
