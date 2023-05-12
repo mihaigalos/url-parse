@@ -11,7 +11,7 @@ A library for parsing URLs.
 
 ## Why?
 
-`url-parse` provides some missing schemes (`sftp`, `ssh`, `s3`) and enables the user to specify custom schemes before parsing.
+`url-parse` provides some schemes unavailable in other url parsing crates (i.e. `sftp`, `ssh`, `s3`) and enables the user to specify custom schemes before parsing.
 
 ## Usage
 
