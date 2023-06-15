@@ -83,6 +83,14 @@ mod tests {
     }
 
     #[test]
+    fn test_login_works_when_git_user() {
+        let input = "git@github.com:mihaigalos/url-parse.git";
+        let expected = (Some("git"), None);
+        let result = Parser::new(None).login(input);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn test_login_works_when_no_login() {
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = (None, None);
