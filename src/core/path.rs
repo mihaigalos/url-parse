@@ -13,7 +13,7 @@ impl Parser {
     /// assert_eq!(result, expected);
     /// ```
     pub fn path<'a>(&self, input: &'a str) -> Option<Vec<&'a str>> {
-        let input = Utils::substring_from_path_begin(self, input);
+        let input = Utils::substring_from_path_begin(self, input).unwrap_or("");
         let input = Utils::substring_after_port(self, input);
         let input = match input.chars().next() {
             Some('/') => &input[1..],
