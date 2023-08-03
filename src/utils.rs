@@ -115,7 +115,7 @@ impl Utils {
     /// let expected =
     ///     "/blog/article/search?docid=720&hl=en#dayone".to_string();
     /// let parser = Parser::new(None);
-    /// let result = Utils::substring_from_path_begin(&parser, input).unwrap_or_else(|| "");
+    /// let result = Utils::substring_from_path_begin(&parser, input).unwrap_or("");
     /// assert_eq!(result, expected);
     /// ```
     pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> Option<&'a str> {
