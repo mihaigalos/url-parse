@@ -104,7 +104,7 @@ impl Utils {
         return input.get(..pos_port).unwrap();
     }
 
-    /// Get substring before path. Eliminates scheme to ensure no colon present in remainder.
+    /// Get substring starting at path field. Eliminates scheme to ensure no colon present in remainder.
     ///
     /// # Example
     /// ```rust
@@ -113,16 +113,16 @@ impl Utils {
     /// let input =
     ///     "https://user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
     /// let expected =
-    ///     "user:pass@www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone".to_string();
+    ///     "/blog/article/search?docid=720&hl=en#dayone".to_string();
     /// let parser = Parser::new(None);
-    /// let result = Utils::substring_after_scheme(&parser, input);
+    /// let result = Utils::substring_from_path_begin(&parser, input).unwrap_or_else(|| "");
     /// assert_eq!(result, expected);
     /// ```
-    pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> &'a str {
+    pub fn substring_from_path_begin<'a>(parser: &Parser, input: &'a str) -> Option<&'a str> {
         let input = Utils::substring_after_scheme(parser, input);
         match input.find('/') {
-            Some(pos) => &input[pos..],
-            None => input,
+            Some(pos) => Some(&input[pos..]),
+            None => None,
         }
     }
 
@@ -258,7 +258,7 @@ mod tests {
         let input = "https://www.example.co.uk:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
-        let result = Utils::substring_from_path_begin(&parser, input);
+        let result = Utils::substring_from_path_begin(&parser, input).unwrap();
         assert_eq!(result, expected);
     }
 
@@ -267,7 +267,7 @@ mod tests {
         let input = "https://www.example.co.uk/blog/article/search?docid=720&hl=en#dayone";
         let expected = "/blog/article/search?docid=720&hl=en#dayone".to_string();
         let parser = Parser::new(None);
-        let result = Utils::substring_from_path_begin(&parser, input);
+        let result = Utils::substring_from_path_begin(&parser, input).unwrap();
         assert_eq!(result, expected);
     }
 

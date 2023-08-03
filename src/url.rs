@@ -384,4 +384,11 @@ mod tests {
 
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn test_no_regression_when_serializing() {
+        use crate::core::Parser;
+        let url = Parser::new(None).parse("google.com").unwrap();
+        assert_eq!("google.com/", url.serialize())
+    }
 }
