@@ -243,4 +243,26 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn test_parse_works_when_ip() {
+        let input = "ftp://192.168.178.242/dir";
+        let result = Parser::new(None).parse(input).unwrap();
+        assert_eq!(
+            result,
+            Url {
+                scheme: Some("ftp".to_string()),
+                user_pass: (None, None),
+                subdomain: None,
+                domain: Some("192.168.178.242".to_string()),
+                top_level_domain: None,
+                port: Some(21),
+                path: Some(vec![
+                    "dir".to_string(),
+                ]),
+                query: None,
+                anchor: None,
+            }
+        );
+    }
 }

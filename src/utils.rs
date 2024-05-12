@@ -140,7 +140,7 @@ impl Utils {
         let mut result = parser
             .scheme(input)
             .map(|s| s.0.to_string() + &<SchemeSeparator as Into<String>>::into(s.1))
-            .unwrap_or_else(|| "".to_string());
+            .unwrap_or_default();
 
         let subpath = Self::trim_leading_slash(subpath);
         let (similarity, input_splits) = Utils::compute_similarity(parser, input, subpath);

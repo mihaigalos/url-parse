@@ -66,7 +66,7 @@ impl Parser {
 
     /// Mixes out the ip v4 into a Domain structure.
     fn domain_ipv4<'a>(&self, input: &'a str) -> Option<Domain<'a>> {
-        let re = Regex::new(r"([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)").unwrap();
+        let re = Regex::new(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)").unwrap();
         let caps = re.captures(input);
         caps.as_ref()?;
         return Some(Domain {
@@ -95,6 +95,19 @@ mod tests {
 
     #[test]
     fn test_domain_ipv4_when_typical() {
+        let input = "https://192.168.178.242/dir";
+        let expected = Domain {
+            subdomain: None,
+            domain: Some("192.168.178.242"),
+            top_level_domain: None,
+        };
+        let result = Parser::new(None).domain_ipv4(input).unwrap();
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_domain_ipv4_when_port() {
         let input = "https://1.2.3.4:443/blog/article/search?docid=720&hl=en#dayone";
         let expected = Domain {
             subdomain: None,
