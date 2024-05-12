@@ -163,7 +163,7 @@ impl Url {
         }
 
         if self.path.is_some() {
-            for (_, segment) in self.path_segments().unwrap().iter().enumerate() {
+            for segment in self.path_segments().unwrap().iter() {
                 result += "/";
                 result += segment;
             }
