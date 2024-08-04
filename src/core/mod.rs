@@ -108,7 +108,7 @@ mod tests {
         for (protocol, _) in default_port_mappings().iter() {
             let address = &format!("{}://{}", protocol, "foo.bar");
             let url = Parser::new(None).parse(address).unwrap();
-            assert!(&url.scheme.as_ref().unwrap() == protocol);
+            assert_eq!(&url.scheme.as_ref().unwrap(), protocol);
         }
     }
 
