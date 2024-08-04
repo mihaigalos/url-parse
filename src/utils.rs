@@ -73,10 +73,7 @@ impl Utils {
             };
 
             let substring_after_port = input.get(pos_port + len_port_string..);
-            return match substring_after_port {
-                Some(v) => v,
-                None => "",
-            };
+            return substring_after_port.unwrap_or_default();
         }
         input
     }
